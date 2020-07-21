@@ -1,0 +1,6 @@
+backend/target
+frontend/target
+shared/target
+
+project/target
+project/metals.sbt
