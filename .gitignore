@@ -4,3 +4,18 @@ shared/target
 
 project/target
 project/metals.sbt
+
+.bloop
+
+*.class
+
+.metals
+
+project/project
+
+shared/.jvm/target
+shared/.js/target
+target
+
+backend/src/main/resources/dev.js
+backend/src/main/resources/prod.js

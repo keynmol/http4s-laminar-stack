@@ -1,8 +1,5 @@
 package example.shared
 
-import io.circe.Decoder
-import io.circe.Codec
-
 object Protocol {
   object GetSuggestions {
 

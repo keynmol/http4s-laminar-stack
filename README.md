@@ -1,0 +1,55 @@
+# http4s-laminar-stack ![build](https://github.com/keynmol/http4s-laminar-stack/workflows/build/badge.svg)
+
+Example of 
+
+1. Client written with [Laminar](https://github.com/raquo/Laminar), interacting with server using [sttp](https://github.com/softwaremill/sttp)
+
+2. Server with http4s serving both the compiled Javascript for the client and an endpoint for server-side interactions
+
+3. Shared code with **protocol** definitions
+
+4. Gzip compression on the server side
+
+5. Docker packaging of the full application
+
+## Development mode
+
+Run in SBT (uses fast JS compilation, not optimized):
+
+```
+sbt> ~runDev
+```
+
+And open http://localhost:9000/frontend
+
+This will restart the server on any changes: shared code, client/server, assets.
+
+## Production mode
+
+Run in SBT (uses full JS optimization):
+
+```
+sbt> ~runProd
+```
+
+## Docker packaging 
+
+```
+sbt> backend/docker:publishLocal
+```
+
+Will publish the docker image with fully optimised JS code, and you can run the container:
+
+```bash
+✗ docker run --rm -p 8080:8080 backend:0.1.0-SNAPSHOT
+
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+Running server on http://0.0.0.0:8080 (mode: prod)
+```
+
+
+The interface is fairly simple:
+
+![](https://imgur.com/S0f0i8i.png)
