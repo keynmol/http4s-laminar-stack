@@ -17,5 +17,5 @@ shared/.jvm/target
 shared/.js/target
 target
 
-backend/src/main/resources/dev.js
-backend/src/main/resources/prod.js
+modules/backend/src/main/resources/dev.js
+modules/backend/src/main/resources/prod.js

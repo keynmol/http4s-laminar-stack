@@ -86,11 +86,13 @@ val copyFrontendFullOpt = taskKey[File]("bla")
 
 lazy val fastOptCompileCopy = taskKey[Unit]("bla")
 
+val jsPath = "modules/backend/src/main/resources"
+
 fastOptCompileCopy := {
   val source = (copyFrontendFastOpt in frontend).value
   IO.copyFile(
     source,
-    baseDirectory.value / "backend/src/main/resources" / "dev.js"
+    baseDirectory.value / jsPath / "dev.js"
   )
 }
 
@@ -100,7 +102,7 @@ fullOptCompileCopy := {
   val source = (copyFrontendFullOpt in frontend).value
   IO.copyFile(
     source,
-    baseDirectory.value / "backend/src/main/resources" / "prod.js"
+    baseDirectory.value / jsPath / "prod.js"
   )
 
 }
