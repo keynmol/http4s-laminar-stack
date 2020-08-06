@@ -13,5 +13,4 @@ object Protocol {
       implicit val codec = io.circe.generic.semiauto.deriveCodec[Response]
     }
   }
-
 }

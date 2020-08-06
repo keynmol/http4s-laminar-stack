@@ -4,7 +4,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 import com.raquo.airstream.signal.Signal
-import example.shared.Protocol.GetSuggestions
+import example.shared.Protocol._
 import sttp.client._
 import sttp.client.circe._
 
