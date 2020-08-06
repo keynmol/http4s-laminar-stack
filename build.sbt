@@ -16,6 +16,7 @@ val V = new {
 val Dependencies = new {
   private val http4sModules =
     Seq("dsl", "blaze-client", "blaze-server", "circe").map("http4s-" + _)
+
   private val sttpModules = Seq("core", "circe")
 
   lazy val frontend = Seq(
@@ -23,7 +24,8 @@ val Dependencies = new {
       sttpModules.map("com.softwaremill.sttp.client" %%% _ % V.sttp) ++
         Seq("com.raquo" %%% "laminar" % V.laminar) ++
         Seq("com.lihaoyi" %%% "utest" % V.utest % Test) ++
-        Seq("io.github.cquiroz" %%% "scala-java-time" % V.scalaJavaTime % Test)
+        Seq("io.github.cquiroz" %%% "scala-java-time" % V.scalaJavaTime % Test) ++
+        Seq("com.raquo" %%% "domtestutils" % "0.12.0" % Test)
   )
 
   lazy val backend = Seq(
@@ -33,8 +35,8 @@ val Dependencies = new {
   )
 
   lazy val shared = new {
-    val js = libraryDependencies += "io.circe" %% "circe-generic" % V.circe
-    val jvm = libraryDependencies += "io.circe" %%% "circe-generic" % V.circe
+    val js = libraryDependencies += "io.circe" %%% "circe-generic" % V.circe
+    val jvm = libraryDependencies += "io.circe" %% "circe-generic" % V.circe
   }
 }
 
@@ -58,7 +60,7 @@ lazy val frontend = (project in file("modules/frontend"))
     Dependencies.frontend,
     Dependencies.shared.js,
     testFrameworks += new TestFramework("utest.runner.Framework"),
-    jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
+    jsEnv in Test := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
   )
   .settings(commonBuildSettings)
 
