@@ -1,8 +1,8 @@
 package example.frontend
 
+import com.raquo.airstream.signal.Signal
 import com.raquo.laminar.api.L._
 import org.scalajs.dom
-import com.raquo.airstream.signal.Signal
 
 object Client {
 
@@ -14,7 +14,7 @@ object Client {
       `type` := "text",
       idAttr := "search-filter",
       inContext(thisNode =>
-        onChange.mapTo(thisNode.ref.value) --> searchString.writer
+        onInput.mapTo(thisNode.ref.value) --> searchString.writer
       )
     )
 
@@ -23,6 +23,10 @@ object Client {
       idAttr := "prefix-only-filter",
       inContext(thisNode =>
         onChange.mapTo(thisNode.ref.checked) --> prefixOnly.writer
+      ),
+      inContext(_ =>
+        onScroll
+          .mapTo({ println("hello"); prefixOnly.now() }) --> prefixOnly.writer
       )
     )
 

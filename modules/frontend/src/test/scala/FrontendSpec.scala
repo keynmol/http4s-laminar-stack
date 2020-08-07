@@ -1,14 +1,16 @@
 package example.frontend
 
-import com.raquo.laminar.api.L._
-import utest._
-import org.scalajs.dom
+import scala.collection.mutable
+import scala.concurrent.Future
+
 import com.raquo.domtestutils.EventSimulator
 import com.raquo.domtestutils.matching.RuleImplicits
+import com.raquo.laminar.api.L._
 import example.shared.Protocol
-import scala.concurrent.Future
-import scala.collection.mutable
+import org.scalajs.dom
 import org.scalajs.dom.raw.Event
+import org.scalajs.dom.raw.EventInit
+import utest._
 
 object ClientSpect extends TestSuite with EventSimulator with RuleImplicits {
   val tests = Tests {
@@ -40,9 +42,12 @@ object ClientSpect extends TestSuite with EventSimulator with RuleImplicits {
 
       harness(t) { testApp =>
         testApp.searchBox.value = "bla"
-        testApp.searchBox.dispatchEvent(new Event("onchange"))
 
-        assert(calls.toList == List("" -> false, "" -> true, "" -> false))
+        testApp.searchBox.dispatchEvent(new Event("onchange", new EventInit {
+          bubbles = true
+        }))
+
+        assert(calls.toList == List("" -> false, "bla" -> false))
       }
     }
   }

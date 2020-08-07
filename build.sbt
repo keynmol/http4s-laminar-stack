@@ -138,7 +138,18 @@ val CICommands = Seq(
   "backend/test",
   "frontend/compile",
   "frontend/fastOptJS",
+  "frontend/test",
+  "scalafmtCheckAll",
   s"scalafix --check $scalafixRules"
 ).mkString(";")
 
+val PrepareCICommands = Seq(
+  s"compile:scalafix --rules $scalafixRules",
+  s"test:scalafix --rules $scalafixRules",
+  "scalafmtAll",
+  "scalafmtSbt"
+).mkString(";")
+
 addCommandAlias("ci", CICommands)
+
+addCommandAlias("preCI", PrepareCICommands)
