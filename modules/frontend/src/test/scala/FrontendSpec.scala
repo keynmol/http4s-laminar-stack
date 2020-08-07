@@ -50,6 +50,36 @@ object ClientSpect extends TestSuite with EventSimulator with RuleImplicits {
         assert(calls.toList == List("" -> false, "bla" -> false))
       }
     }
+
+    test("event propagation") {
+      import dom.document
+
+      val el = document.createElement("div")
+
+      document.body.appendChild(el)
+
+      val app = input(`typ` := "text")
+
+      app.ref.addEventListener[Event](
+        "change",
+        ev => println(s"yo ${ev.target.asInstanceOf[dom.html.Input].value}")
+      )
+
+      val root = render(el, app)
+
+      app.ref.value = "hello!"
+
+      // app.ref.dispatchEvent(new Event("onchange", new EventInit {
+      //     bubbles = true
+      //   }))
+
+      app.ref.dispatchEvent(new Event("change", new EventInit {
+        bubbles = true
+      }))
+
+      root.unmount()
+    }
+
   }
 
   case class TestApp(
@@ -65,7 +95,7 @@ object ClientSpect extends TestSuite with EventSimulator with RuleImplicits {
 
     document.body.appendChild(el)
 
-    render(el, Client.app(testApi, 0))
+    val root = render(el, Client.app(testApi, 0))
 
     val prefixFilter = document
       .getElementById("prefix-only-filter")
@@ -77,7 +107,10 @@ object ClientSpect extends TestSuite with EventSimulator with RuleImplicits {
     val results =
       document.getElementById("results").asInstanceOf[dom.html.Element]
 
-    f(TestApp(prefixFilter, searchBox, results))
+    try { f(TestApp(prefixFilter, searchBox, results)) }
+    finally {
+      root.unmount()
+    }
   }
 
   def testApi(f: (String, Boolean) => Either[Throwable, List[String]]) =
