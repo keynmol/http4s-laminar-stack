@@ -51,7 +51,6 @@ object ClientSpect extends TestSuite with EventSimulator with RuleImplicits {
       }
     }
 
-
   }
 
   case class TestApp(

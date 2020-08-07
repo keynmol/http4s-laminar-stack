@@ -146,7 +146,8 @@ val CICommands = Seq(
 val PrepareCICommands = Seq(
   s"compile:scalafix --rules $scalafixRules",
   s"test:scalafix --rules $scalafixRules",
-  "scalafmtAll",
+  "test:scalafmtAll",
+  "compile:scalafmtAll",
   "scalafmtSbt"
 ).mkString(";")
 
