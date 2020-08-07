@@ -23,10 +23,6 @@ object Client {
       idAttr := "prefix-only-filter",
       inContext(thisNode =>
         onChange.mapTo(thisNode.ref.checked) --> prefixOnly.writer
-      ),
-      inContext(_ =>
-        onScroll
-          .mapTo({ println("hello"); prefixOnly.now() }) --> prefixOnly.writer
       )
     )
 
@@ -61,7 +57,6 @@ object Client {
   }
 
   def main(args: Array[String]): Unit = {
-
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(dom.document.getElementById("appContainer"), app(FutureApi))
     }(unsafeWindowOwner)

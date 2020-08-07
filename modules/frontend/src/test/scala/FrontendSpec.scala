@@ -43,7 +43,7 @@ object ClientSpect extends TestSuite with EventSimulator with RuleImplicits {
       harness(t) { testApp =>
         testApp.searchBox.value = "bla"
 
-        testApp.searchBox.dispatchEvent(new Event("onchange", new EventInit {
+        testApp.searchBox.dispatchEvent(new Event("input", new EventInit {
           bubbles = true
         }))
 
@@ -51,34 +51,6 @@ object ClientSpect extends TestSuite with EventSimulator with RuleImplicits {
       }
     }
 
-    test("event propagation") {
-      import dom.document
-
-      val el = document.createElement("div")
-
-      document.body.appendChild(el)
-
-      val app = input(`typ` := "text")
-
-      app.ref.addEventListener[Event](
-        "change",
-        ev => println(s"yo ${ev.target.asInstanceOf[dom.html.Input].value}")
-      )
-
-      val root = render(el, app)
-
-      app.ref.value = "hello!"
-
-      // app.ref.dispatchEvent(new Event("onchange", new EventInit {
-      //     bubbles = true
-      //   }))
-
-      app.ref.dispatchEvent(new Event("change", new EventInit {
-        bubbles = true
-      }))
-
-      root.unmount()
-    }
 
   }
 
