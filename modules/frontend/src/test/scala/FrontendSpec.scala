@@ -14,40 +14,75 @@ import utest._
 
 object ClientSpect extends TestSuite with EventSimulator with RuleImplicits {
   val tests = Tests {
-    test("client respects `prefix only` checkbox") {
-      val calls = mutable.ListBuffer.empty[(String, Boolean)]
+    Symbol("whole client tests") {
+      test("client respects `prefix only` checkbox") {
+        val calls = mutable.ListBuffer.empty[(String, Boolean)]
 
-      val t = testApi {
-        case (s, b) =>
-          calls.addOne(s -> b)
-          Right(List("hello" + s, "world" + b.toString()))
+        val t = testApi {
+          case (s, b) =>
+            calls.addOne(s -> b)
+            Right(List("hello", "world"))
+        }
+
+        harness(t) { testApp =>
+          testApp.prefixFilter.click()
+          testApp.prefixFilter.click()
+
+          assert(calls.toList == List("" -> false, "" -> true, "" -> false))
+        }
       }
 
-      harness(t) { testApp =>
-        testApp.prefixFilter.click()
-        testApp.prefixFilter.click()
+      test("respects `search` input") {
+        val calls = mutable.ListBuffer.empty[(String, Boolean)]
 
-        assert(calls.toList == List("" -> false, "" -> true, "" -> false))
+        val t = testApi {
+          case (s, b) =>
+            calls.addOne(s -> b)
+            Right(List("hello", "world"))
+        }
+
+        harness(t) { testApp =>
+          testApp.simulateValueInput(testApp.searchBox, "bla")
+
+          assert(calls.toList == List("" -> false, "bla" -> false))
+
+          testApp.simulateValueInput(testApp.searchBox, "something")
+
+          assert(
+            calls.toList == List(
+              "" -> false,
+              "bla" -> false,
+              "something" -> false
+            )
+          )
+        }
       }
-    }
 
-    test("respects `search` input") {
-      val calls = mutable.ListBuffer.empty[(String, Boolean)]
+      test("renders the results correctly") {
+        val apiReturn = List("a", "b", "c", "d")
 
-      val t = testApi {
-        case (s, b) =>
-          calls.addOne(s -> b)
-          Right(List("hello" + s, "world" + b.toString()))
-      }
+        val t = testApi {
+          case (s, _) =>
+            if (s == "test")
+              Right(apiReturn)
+            else Right(Nil)
+        }
 
-      harness(t) { testApp =>
-        testApp.searchBox.value = "bla"
+        harness(t) { testApp =>
+          def renderedResults = testApp.results.getElementsByTagName("li")
 
-        testApp.searchBox.dispatchEvent(new Event("input", new EventInit {
-          bubbles = true
-        }))
+          assert(renderedResults.length == 0)
 
-        assert(calls.toList == List("" -> false, "bla" -> false))
+          testApp.simulateValueInput(testApp.searchBox, "test")
+
+          assert(renderedResults.length == apiReturn.length)
+
+          apiReturn.zipWithIndex.foreach {
+            case (expected, idx) =>
+              assert(renderedResults.apply(idx).innerHTML == expected)
+          }
+        }
+
       }
     }
 
@@ -57,7 +92,14 @@ object ClientSpect extends TestSuite with EventSimulator with RuleImplicits {
       prefixFilter: dom.html.Input,
       searchBox: dom.html.Input,
       results: dom.html.Element
-  )
+  ) {
+    def simulateValueInput(inp: dom.html.Input, value: String) = {
+      inp.value = value
+      inp.dispatchEvent(new Event("input", new EventInit {
+        bubbles = true
+      }))
+    }
+  }
 
   def harness(testApi: Api)(f: TestApp => Unit) = {
     import dom.document
