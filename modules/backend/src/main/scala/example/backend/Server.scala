@@ -1,7 +1,6 @@
 package example.backend
 
 import cats.effect._
-import cats.implicits._
 import org.http4s.implicits._
 import org.http4s.server.blaze.BlazeServerBuilder
 import org.http4s.server.middleware.GZip

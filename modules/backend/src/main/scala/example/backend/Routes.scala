@@ -3,7 +3,6 @@ package example.backend
 import scala.concurrent.duration._
 
 import cats.effect._
-import cats.implicits._
 import example.shared.Protocol._
 import org.http4s.HttpRoutes
 import org.http4s.StaticFile
