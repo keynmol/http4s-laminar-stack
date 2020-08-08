@@ -3,8 +3,6 @@ package example.frontend
 import scala.collection.mutable
 import scala.concurrent.Future
 
-import com.raquo.domtestutils.EventSimulator
-import com.raquo.domtestutils.matching.RuleImplicits
 import com.raquo.laminar.api.L._
 import example.shared.Protocol
 import org.scalajs.dom
@@ -12,7 +10,7 @@ import org.scalajs.dom.raw.Event
 import org.scalajs.dom.raw.EventInit
 import utest._
 
-object ClientSpect extends TestSuite with EventSimulator with RuleImplicits {
+object ClientSpect extends TestSuite {
   val tests = Tests {
     Symbol("whole client tests") {
       test("client respects `prefix only` checkbox") {

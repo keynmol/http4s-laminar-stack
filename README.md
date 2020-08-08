@@ -12,6 +12,8 @@ Example of
 
 5. Docker packaging of the full application
 
+6. Tests for the client with simulated DOM using [jsdom](https://github.com/scala-js/scala-js-env-jsdom-nodejs)
+
 ## Development mode
 
 Run in SBT (uses fast JS compilation, not optimized):

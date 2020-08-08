@@ -22,7 +22,7 @@ object ServerConfig {
 
   private val modeOpt = Opts
     .option[String]("mode", help = "Mode (dev or prod)")
-    .withDefault("dev")
+    .withDefault(DefaultMode)
     .validate("must be one of: dev, prod")(Set("dev", "prod").contains)
 
   def apply: Command[ServerConfig] =

@@ -1,5 +1,6 @@
 val V = new {
   val Scala = "2.13.2"
+  val ScalaGroup = "2.13"
 
   val cats = "2.1.1"
   val laminar = "0.9.1"
@@ -10,7 +11,6 @@ val V = new {
   val organiseImports = "0.4.0"
   val betterMonadicFor = "0.3.1"
   val utest = "0.7.4"
-  val scalaJavaTime = "2.0.0"
 }
 
 val Dependencies = new {
@@ -23,9 +23,7 @@ val Dependencies = new {
     libraryDependencies ++=
       sttpModules.map("com.softwaremill.sttp.client" %%% _ % V.sttp) ++
         Seq("com.raquo" %%% "laminar" % V.laminar) ++
-        Seq("com.lihaoyi" %%% "utest" % V.utest % Test) ++
-        Seq("io.github.cquiroz" %%% "scala-java-time" % V.scalaJavaTime % Test) ++
-        Seq("com.raquo" %%% "domtestutils" % "0.12.0" % Test)
+        Seq("com.lihaoyi" %%% "utest" % V.utest % Test)
   )
 
   lazy val backend = Seq(
@@ -45,7 +43,7 @@ inThisBuild(
     scalafixDependencies += "com.github.liancheng" %% "organize-imports" % V.organiseImports,
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
-    scalafixScalaBinaryVersion := "2.13"
+    scalafixScalaBinaryVersion := V.ScalaGroup
   )
 )
 
