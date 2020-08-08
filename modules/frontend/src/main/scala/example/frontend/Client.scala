@@ -6,32 +6,49 @@ import org.scalajs.dom
 
 object Client {
 
+  case class SearchBox private (node: Element, signal: Signal[String])
+  object SearchBox {
+    def create = {
+      val node = input(
+        `type` := "text",
+        idAttr := "search-filter"
+      )
+
+      val stream =
+        node.events(onInput).mapTo(node.ref.value).startWith("")
+
+      new SearchBox(node, stream)
+    }
+  }
+
+  case class PrefixOnlyCheckbox private (node: Element, signal: Signal[Boolean])
+  object PrefixOnlyCheckbox {
+    def create = {
+      val node = input(
+        `type` := "checkbox",
+        idAttr := "prefix-only-filter"
+      )
+
+      val stream =
+        node
+          .events(onChange)
+          .mapTo(node.ref.checked)
+          .startWith(node.ref.checked)
+
+      new PrefixOnlyCheckbox(node, stream)
+    }
+  }
+
   def app(api: Api, debounce: Int = 250) = {
-    val searchString = Var("")
-    val prefixOnly = Var(false)
-
-    val filterInput = input(
-      `type` := "text",
-      idAttr := "search-filter",
-      inContext(thisNode =>
-        onInput.mapTo(thisNode.ref.value) --> searchString.writer
-      )
-    )
-
-    val prefixOnlyCheckbox = input(
-      `type` := "checkbox",
-      idAttr := "prefix-only-filter",
-      inContext(thisNode =>
-        onChange.mapTo(thisNode.ref.checked) --> prefixOnly.writer
-      )
-    )
+    val searchBox = SearchBox.create
+    val prefixOnly = PrefixOnlyCheckbox.create
 
     val debounced =
       if (debounce > 0)
-        searchString.signal
+        searchBox.signal
           .combineWith(prefixOnly.signal)
           .composeChanges(_.debounce(debounce))
-      else searchString.signal.combineWith(prefixOnly.signal)
+      else searchBox.signal.combineWith(prefixOnly.signal)
 
     val resolved =
       debounced
@@ -49,8 +66,8 @@ object Client {
       div(idAttr := "results", child <-- resolved)
 
     div(
-      div("Search: ", filterInput),
-      div("Prefix only", prefixOnlyCheckbox),
+      div("Search: ", searchBox.node),
+      div("Prefix only", prefixOnly.node),
       results
     )
 
