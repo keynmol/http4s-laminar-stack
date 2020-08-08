@@ -3,12 +3,18 @@ package example.frontend
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-import com.raquo.airstream.signal.Signal
-import example.shared.Protocol.GetSuggestions
+import example.shared.Protocol._
 import sttp.client._
 import sttp.client.circe._
 
-object Api {
+trait Api {
+  def post(
+      search: String,
+      prefixOnly: Boolean = false
+  ): Future[Either[Throwable, GetSuggestions.Response]]
+}
+
+object FutureApi extends Api {
   implicit val backend = FetchBackend()
 
   val ApiHost = {
@@ -20,15 +26,17 @@ object Api {
     s"$scheme//$host"
   }
 
-  def post(search: String, prefixOnly: Boolean = false) = {
+  def post(
+      search: String,
+      prefixOnly: Boolean = false
+  ): Future[Either[Throwable, GetSuggestions.Response]] = {
 
     val req = basicRequest
       .post(uri"$ApiHost/get-suggestions")
       .body(GetSuggestions.Request(search, Some(prefixOnly)))
       .response(asJson[GetSuggestions.Response])
 
-    val freq = req.send[Future].map(_.body)
-
-    Signal.fromFuture(freq)
+    req.send[Future].map(_.body)
   }
+
 }
