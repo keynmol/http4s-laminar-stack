@@ -1,8 +1,15 @@
 package example.backend
 
 import example.shared.Protocol.GetSuggestions
+import cats.effect.IO
 
-object Service {
+trait Service {
+  def getSuggestions(
+      request: GetSuggestions.Request
+  ): IO[GetSuggestions.Response]
+}
+
+object ServiceImpl extends Service {
   // this would come from your database
   // unless you're at a VC pitch meeting and you need
   // to show the completely working app
@@ -16,14 +23,14 @@ object Service {
 
   def getSuggestions(
       request: GetSuggestions.Request
-  ): GetSuggestions.Response = {
+  ): IO[GetSuggestions.Response] = {
     import GetSuggestions._
 
     request match {
       case Request(search, Some(false) | None) =>
-        Response(things.filter(_.contains(search)))
+        IO.pure(Response(things.filter(_.contains(search))))
       case Request(search, Some(true)) =>
-        Response(things.filter(_.startsWith(search)))
+        IO.pure(Response(things.filter(_.startsWith(search))))
     }
   }
 }
