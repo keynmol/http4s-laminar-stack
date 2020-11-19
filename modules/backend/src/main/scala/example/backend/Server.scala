@@ -12,9 +12,9 @@ object Server extends IOApp {
       for {
         blocker <- Blocker.apply[IO]
 
-        builder = BlazeServerBuilder[IO].bindHttp(config.port, config.host)
+        builder    = BlazeServerBuilder[IO].bindHttp(config.port, config.host)
         frontendJS = config.mode + ".js"
-        routes = new Routes(blocker, frontendJS).routes
+        routes     = new Routes(blocker, frontendJS).routes
 
         app = GZip(routes)
 

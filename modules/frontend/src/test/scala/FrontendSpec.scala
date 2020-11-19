@@ -16,10 +16,9 @@ object ClientSpect extends TestSuite {
       test("client respects `prefix only` checkbox") {
         val calls = mutable.ListBuffer.empty[(String, Boolean)]
 
-        val t = testApi {
-          case (s, b) =>
-            calls.addOne(s -> b)
-            Right(List("hello", "world"))
+        val t = testApi { case (s, b) =>
+          calls.addOne(s -> b)
+          Right(List("hello", "world"))
         }
 
         harness(t) { testApp =>
@@ -33,10 +32,9 @@ object ClientSpect extends TestSuite {
       test("respects `search` input") {
         val calls = mutable.ListBuffer.empty[(String, Boolean)]
 
-        val t = testApi {
-          case (s, b) =>
-            calls.addOne(s -> b)
-            Right(List("hello", "world"))
+        val t = testApi { case (s, b) =>
+          calls.addOne(s -> b)
+          Right(List("hello", "world"))
         }
 
         harness(t) { testApp =>
@@ -48,8 +46,8 @@ object ClientSpect extends TestSuite {
 
           assert(
             calls.toList == List(
-              "" -> false,
-              "bla" -> false,
+              ""          -> false,
+              "bla"       -> false,
               "something" -> false
             )
           )
@@ -59,11 +57,10 @@ object ClientSpect extends TestSuite {
       test("renders the results correctly") {
         val apiReturn = List("a", "b", "c", "d")
 
-        val t = testApi {
-          case (s, _) =>
-            if (s == "test")
-              Right(apiReturn)
-            else Right(Nil)
+        val t = testApi { case (s, _) =>
+          if (s == "test")
+            Right(apiReturn)
+          else Right(Nil)
         }
 
         harness(t) { testApp =>
@@ -75,9 +72,8 @@ object ClientSpect extends TestSuite {
 
           assert(renderedResults.length == apiReturn.length)
 
-          apiReturn.zipWithIndex.foreach {
-            case (expected, idx) =>
-              assert(renderedResults.apply(idx).innerHTML == expected)
+          apiReturn.zipWithIndex.foreach { case (expected, idx) =>
+            assert(renderedResults.apply(idx).innerHTML == expected)
           }
         }
 
@@ -93,9 +89,14 @@ object ClientSpect extends TestSuite {
   ) {
     def simulateValueInput(inp: dom.html.Input, value: String) = {
       inp.value = value
-      inp.dispatchEvent(new Event("input", new EventInit {
-        bubbles = true
-      }))
+      inp.dispatchEvent(
+        new Event(
+          "input",
+          new EventInit {
+            bubbles = true
+          }
+        )
+      )
     }
   }
 

@@ -10,8 +10,8 @@ import org.http4s.circe.CirceEntityDecoder._
 import org.http4s.circe.CirceEntityEncoder._
 import org.http4s.dsl.io._
 
-class Routes(blocker: Blocker, frontendJS: String)(
-    implicit timer: Timer[IO],
+class Routes(blocker: Blocker, frontendJS: String)(implicit
+    timer: Timer[IO],
     cs: ContextShift[IO]
 ) {
   def routes = HttpRoutes.of[IO] {

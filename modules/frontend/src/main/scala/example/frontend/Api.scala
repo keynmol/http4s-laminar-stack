@@ -21,7 +21,7 @@ object FutureApi extends Api {
     import org.scalajs.dom
 
     val scheme = dom.window.location.protocol
-    val host = dom.window.location.host
+    val host   = dom.window.location.host
 
     s"$scheme//$host"
   }

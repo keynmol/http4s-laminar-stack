@@ -40,7 +40,7 @@ object Client {
   }
 
   def app(api: Api, debounce: Int = 250) = {
-    val searchBox = SearchBox.create
+    val searchBox  = SearchBox.create
     val prefixOnly = PrefixOnlyCheckbox.create
 
     val debounced =

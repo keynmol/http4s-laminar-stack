@@ -1,16 +1,16 @@
 val V = new {
-  val Scala = "2.13.3"
+  val Scala      = "2.13.3"
   val ScalaGroup = "2.13"
 
-  val cats = "2.1.1"
-  val laminar = "0.11.0"
-  val http4s = "0.21.9"
-  val sttp = "2.2.9"
-  val circe = "0.13.0"
-  val decline = "1.3.0"
-  val organiseImports = "0.4.0"
+  val cats             = "2.1.1"
+  val laminar          = "0.11.0"
+  val http4s           = "0.21.9"
+  val sttp             = "2.2.9"
+  val circe            = "0.13.0"
+  val decline          = "1.3.0"
+  val organiseImports  = "0.4.0"
   val betterMonadicFor = "0.3.1"
-  val utest = "0.7.5"
+  val utest            = "0.7.5"
 }
 
 val Dependencies = new {
@@ -21,20 +21,20 @@ val Dependencies = new {
 
   lazy val frontend = Seq(
     libraryDependencies ++=
-      sttpModules.map("com.softwaremill.sttp.client" %%% _ % V.sttp) ++
-        Seq("com.raquo" %%% "laminar" % V.laminar) ++
+      sttpModules.map("com.softwaremill.sttp.client" %%% _         % V.sttp) ++
+        Seq("com.raquo"                              %%% "laminar" % V.laminar) ++
         Seq("com.lihaoyi" %%% "utest" % V.utest % Test)
   )
 
   lazy val backend = Seq(
     libraryDependencies ++=
-      http4sModules.map("org.http4s" %% _ % V.http4s) ++
-        Seq("com.monovore" %% "decline" % V.decline)
+      http4sModules.map("org.http4s" %% _         % V.http4s) ++
+        Seq("com.monovore"           %% "decline" % V.decline)
   )
 
   lazy val shared = new {
-    val js = libraryDependencies += "io.circe" %%% "circe-generic" % V.circe
-    val jvm = libraryDependencies += "io.circe" %% "circe-generic" % V.circe
+    val js  = libraryDependencies += "io.circe" %%% "circe-generic" % V.circe
+    val jvm = libraryDependencies += "io.circe"  %% "circe-generic" % V.circe
   }
 }
 
