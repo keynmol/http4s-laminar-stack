@@ -3,14 +3,14 @@ val V = new {
   val ScalaGroup = "2.13"
 
   val cats = "2.1.1"
-  val laminar = "0.9.2"
-  val http4s = "0.21.6"
-  val sttp = "2.2.4"
+  val laminar = "0.11.0"
+  val http4s = "0.21.9"
+  val sttp = "2.2.9"
   val circe = "0.13.0"
-  val decline = "1.2.0"
+  val decline = "1.3.0"
   val organiseImports = "0.4.0"
   val betterMonadicFor = "0.3.1"
-  val utest = "0.7.4"
+  val utest = "0.7.5"
 }
 
 val Dependencies = new {

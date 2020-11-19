@@ -19,3 +19,7 @@ target
 
 modules/backend/src/main/resources/dev.js
 modules/backend/src/main/resources/prod.js
+
+node_modules
+
+.vscode
