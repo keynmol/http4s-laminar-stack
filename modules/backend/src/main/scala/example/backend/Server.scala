@@ -30,7 +30,7 @@ object Server extends IOApp {
             s"Running server on http://${config.host}:${config.port} (mode: ${config.mode})"
           )
         )
-        
+
         resource(ServiceImpl, config)
           .use(_ => status *> IO.never)
           .as(ExitCode.Success)

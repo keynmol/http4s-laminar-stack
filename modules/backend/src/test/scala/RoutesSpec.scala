@@ -1,22 +1,21 @@
 package example.backend
 
+import scala.io.Source
+
+import _root_.io.circe.syntax._
 import cats.effect.Blocker
 import cats.effect.ContextShift
 import cats.effect.IO
 import cats.effect.Resource
 import cats.effect.Timer
-
+import example.shared.Protocol
+import org.http4s.Method
 import org.http4s.Request
 import org.http4s.Response
+import org.http4s.Uri
+import org.http4s.circe.CirceEntityEncoder._
 import org.http4s.dsl._
 import org.http4s.implicits._
-import scala.io.Source
-import org.http4s.Method
-import org.http4s.Uri
-import example.shared.Protocol
-import _root_.io.circe.syntax._
-
-import org.http4s.circe.CirceEntityEncoder._
 
 object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
   override type Res = Probe

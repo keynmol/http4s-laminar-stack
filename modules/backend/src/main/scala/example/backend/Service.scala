@@ -1,7 +1,7 @@
 package example.backend
 
-import example.shared.Protocol.GetSuggestions
 import cats.effect.IO
+import example.shared.Protocol.GetSuggestions
 
 trait Service {
   def getSuggestions(
