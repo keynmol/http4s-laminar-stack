@@ -44,15 +44,15 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
 //       }
 //   }
 
-//   test("returns 404 for assets with with disallowed extensions") { probe =>
-//     probe
-//       .get(uri"/assets/secret.password")
-//       .map { response =>
-//         expect.all(
-//           response.status.code == 404
-//         )
-//       }
-//   }
+  test("returns 404 for assets with with disallowed extensions") { probe =>
+    probe
+      .get(uri"/assets/secret.password")
+      .map { response =>
+        expect.all(
+          response.status.code == 404
+        )
+      }
+  }
 
   test("calls the service on /get-suggestions") { probe =>
     import Protocol.{GetSuggestions => GS}
