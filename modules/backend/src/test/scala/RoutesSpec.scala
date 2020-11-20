@@ -21,6 +21,8 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
   override type Res = Probe
   override def sharedResource: Resource[IO, Res] = Blocker[IO].map(Probe(_))
 
+  override def maxParallelism: Int = 1
+
   test("serves frontend from specified resource file") { probe =>
     probe
       .copy(frontendFile = "frontend.js")
@@ -33,58 +35,58 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
       }
   }
 
-//   test("serves assets with allowed extensions") { probe =>
-//     probe
-//       .get(uri"/assets/allowed.css")
-//       .map { response =>
-//         expect.all(
-//           response.status.code == 200,
-//           response.readBody == read("assets/allowed.css")
-//         )
-//       }
-//   }
+  test("serves assets with allowed extensions") { probe =>
+    probe
+      .get(uri"/assets/allowed.css")
+      .map { response =>
+        expect.all(
+          response.status.code == 200,
+          response.readBody == read("assets/allowed.css")
+        )
+      }
+  }
 
-//   test("returns 404 for assets with with disallowed extensions") { probe =>
-//     probe
-//       .get(uri"/assets/secret.password")
-//       .map { response =>
-//         expect.all(
-//           response.status.code == 404
-//         )
-//       }
-//   }
+  test("returns 404 for assets with with disallowed extensions") { probe =>
+    probe
+      .get(uri"/assets/secret.password")
+      .map { response =>
+        expect.all(
+          response.status.code == 404
+        )
+      }
+  }
 
-//   test("calls the service on /get-suggestions") { probe =>
-//     import Protocol.{GetSuggestions => GS}
+  test("calls the service on /get-suggestions") { probe =>
+    import Protocol.{GetSuggestions => GS}
 
-//     val stubResponse = GS.Response(
-//       Seq("a", "b", "c", "d")
-//     )
+    val stubResponse = GS.Response(
+      Seq("a", "b", "c", "d")
+    )
 
-//     val serviceImpl = new Service {
-//       override def getSuggestions(
-//           request: GS.Request
-//       ): IO[GS.Response] = IO(stubResponse)
-//     }
+    val serviceImpl = new Service {
+      override def getSuggestions(
+          request: GS.Request
+      ): IO[GS.Response] = IO(stubResponse)
+    }
 
-//     val request = GS.Request("hello!")
+    val request = GS.Request("hello!")
 
-//     probe
-//       .copy(serviceImpl = serviceImpl)
-//       .routes()
-//       .run(
-//         Request(
-//           POST,
-//           uri"/get-suggestions"
-//         ).withEntity(request)
-//       )
-//       .map { response =>
-//         expect.all(
-//           response.status.code == 200,
-//           response.readBody == stubResponse.asJson.noSpaces
-//         )
-//       }
-//   }
+    probe
+      .copy(serviceImpl = serviceImpl)
+      .routes()
+      .run(
+        Request(
+          POST,
+          uri"/get-suggestions"
+        ).withEntity(request)
+      )
+      .map { response =>
+        expect.all(
+          response.status.code == 200,
+          response.readBody == stubResponse.asJson.noSpaces
+        )
+      }
+  }
 
   private def read(path: String) = Source
     .fromResource(path)
