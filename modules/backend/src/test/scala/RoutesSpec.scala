@@ -22,8 +22,6 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
   override type Res = Probe
   override def sharedResource: Resource[IO, Res] = Blocker[IO].map(Probe(_))
 
-  val classloader = StaticFile.getClass().getClassLoader()
-
   test("serves frontend from specified resource file") { probe =>
     probe
       .copy(frontendFile = "frontend.js")
@@ -31,7 +29,7 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
       .map { response =>
         expect.all(
           response.status.code == 200,
-          response.readBody == read("frontend.js")
+          response.readBody == probe.read("frontend.js")
         )
       }
   }
@@ -42,7 +40,7 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
       .map { response =>
         expect.all(
           response.status.code == 200,
-          response.readBody == read("assets/allowed.css")
+          response.readBody == probe.read("assets/allowed.css")
         )
       }
   }
@@ -89,10 +87,6 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
       }
   }
 
-  private def read(path: String) = Source
-    .fromResource(path, classloader)
-    .mkString
-
   implicit class RespOps(resp: Response[IO]) {
     def readBody: String =
       resp.bodyAsText.compile.toVector.unsafeRunSync().mkString
@@ -108,6 +102,12 @@ case class Probe(
     timer: Timer[IO],
     cs: ContextShift[IO]
 ) {
+
+  val classloader = getClass().getClassLoader()
+
+  def read(path: String) = Source
+    .fromResource(path, classloader)
+    .mkString
 
   def get(uri: Uri) = routes().run(
     Request(
