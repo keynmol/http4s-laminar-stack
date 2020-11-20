@@ -21,38 +21,38 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
   override type Res = Probe
   override def sharedResource: Resource[IO, Res] = Blocker[IO].map(Probe(_))
 
-  test("serves frontend from specified resource file") { probe =>
-    probe
-      .copy(frontendFile = "frontend.js")
-      .get(uri"/frontend/app.js")
-      .map { response =>
-        expect.all(
-          response.status.code == 200,
-          response.readBody == read("frontend.js")
-        )
-      }
-  }
+//   test("serves frontend from specified resource file") { probe =>
+//     probe
+//       .copy(frontendFile = "frontend.js")
+//       .get(uri"/frontend/app.js")
+//       .map { response =>
+//         expect.all(
+//           response.status.code == 200,
+//           response.readBody == read("frontend.js")
+//         )
+//       }
+//   }
 
-  test("serves assets with allowed extensions") { probe =>
-    probe
-      .get(uri"/assets/allowed.css")
-      .map { response =>
-        expect.all(
-          response.status.code == 200,
-          response.readBody == read("assets/allowed.css")
-        )
-      }
-  }
+//   test("serves assets with allowed extensions") { probe =>
+//     probe
+//       .get(uri"/assets/allowed.css")
+//       .map { response =>
+//         expect.all(
+//           response.status.code == 200,
+//           response.readBody == read("assets/allowed.css")
+//         )
+//       }
+//   }
 
-  test("returns 404 for assets with with disallowed extensions") { probe =>
-    probe
-      .get(uri"/assets/secret.password")
-      .map { response =>
-        expect.all(
-          response.status.code == 404
-        )
-      }
-  }
+//   test("returns 404 for assets with with disallowed extensions") { probe =>
+//     probe
+//       .get(uri"/assets/secret.password")
+//       .map { response =>
+//         expect.all(
+//           response.status.code == 404
+//         )
+//       }
+//   }
 
   test("calls the service on /get-suggestions") { probe =>
     import Protocol.{GetSuggestions => GS}
