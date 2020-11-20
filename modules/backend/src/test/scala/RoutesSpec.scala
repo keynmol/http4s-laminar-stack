@@ -21,17 +21,17 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
   override type Res = Probe
   override def sharedResource: Resource[IO, Res] = Blocker[IO].map(Probe(_))
 
-//   test("serves frontend from specified resource file") { probe =>
-//     probe
-//       .copy(frontendFile = "frontend.js")
-//       .get(uri"/frontend/app.js")
-//       .map { response =>
-//         expect.all(
-//           response.status.code == 200,
-//           response.readBody == read("frontend.js")
-//         )
-//       }
-//   }
+  test("serves frontend from specified resource file") { probe =>
+    probe
+      .copy(frontendFile = "frontend.js")
+      .get(uri"/frontend/app.js")
+      .map { response =>
+        expect.all(
+          response.status.code == 200,
+          response.readBody == read("frontend.js")
+        )
+      }
+  }
 
   test("serves assets with allowed extensions") { probe =>
     probe
