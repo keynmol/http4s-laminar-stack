@@ -1,6 +1,7 @@
 package example.backend
 
 import cats.implicits._
+
 import com.monovore.decline._
 
 case class ServerConfig(

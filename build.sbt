@@ -1,16 +1,16 @@
 val V = new {
-  val Scala = "2.13.3"
+  val Scala      = "2.13.3"
   val ScalaGroup = "2.13"
 
-  val cats = "2.1.1"
-  val laminar = "0.9.2"
-  val http4s = "0.21.6"
-  val sttp = "2.2.4"
-  val circe = "0.13.0"
-  val decline = "1.2.0"
-  val organiseImports = "0.4.0"
+  val cats             = "2.1.1"
+  val laminar          = "0.11.0"
+  val http4s           = "0.21.9"
+  val sttp             = "2.2.9"
+  val circe            = "0.13.0"
+  val decline          = "1.3.0"
+  val organiseImports  = "0.4.0"
   val betterMonadicFor = "0.3.1"
-  val utest = "0.7.4"
+  val weaver           = "0.5.0"
 }
 
 val Dependencies = new {
@@ -21,21 +21,24 @@ val Dependencies = new {
 
   lazy val frontend = Seq(
     libraryDependencies ++=
-      sttpModules.map("com.softwaremill.sttp.client" %%% _ % V.sttp) ++
-        Seq("com.raquo" %%% "laminar" % V.laminar) ++
-        Seq("com.lihaoyi" %%% "utest" % V.utest % Test)
+      sttpModules.map("com.softwaremill.sttp.client" %%% _         % V.sttp) ++
+        Seq("com.raquo"                              %%% "laminar" % V.laminar)
   )
 
   lazy val backend = Seq(
     libraryDependencies ++=
-      http4sModules.map("org.http4s" %% _ % V.http4s) ++
-        Seq("com.monovore" %% "decline" % V.decline)
+      http4sModules.map("org.http4s" %% _         % V.http4s) ++
+        Seq("com.monovore"           %% "decline" % V.decline)
   )
 
-  lazy val shared = new {
-    val js = libraryDependencies += "io.circe" %%% "circe-generic" % V.circe
-    val jvm = libraryDependencies += "io.circe" %% "circe-generic" % V.circe
-  }
+  lazy val shared = Def.settings(
+    libraryDependencies += "io.circe" %%% "circe-generic" % V.circe
+  )
+
+  lazy val tests = Def.settings(
+    libraryDependencies += "com.disneystreaming" %%% "weaver-framework" % V.weaver % Test,
+    testFrameworks += new TestFramework("weaver.framework.TestFramework")
+  )
 }
 
 inThisBuild(
@@ -56,8 +59,7 @@ lazy val frontend = (project in file("modules/frontend"))
   .settings(scalaJSUseMainModuleInitializer := true)
   .settings(
     Dependencies.frontend,
-    Dependencies.shared.js,
-    testFrameworks += new TestFramework("utest.runner.Framework"),
+    Dependencies.tests,
     jsEnv in Test := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
   )
   .settings(commonBuildSettings)
@@ -65,10 +67,12 @@ lazy val frontend = (project in file("modules/frontend"))
 lazy val backend = (project in file("modules/backend"))
   .dependsOn(shared.jvm)
   .settings(Dependencies.backend)
+  .settings(Dependencies.tests)
   .settings(commonBuildSettings)
   .enablePlugins(JavaAppPackaging)
   .enablePlugins(DockerPlugin)
   .settings(
+    fork in Test := true,
     mappings in Universal += {
       val appJs = (frontend / Compile / fullOptJS).value.data
       appJs -> ("lib/prod.js")
@@ -83,8 +87,8 @@ lazy val backend = (project in file("modules/backend"))
 lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("modules/shared"))
-  .jvmSettings(Dependencies.shared.jvm)
-  .jsSettings(Dependencies.shared.js)
+  .jvmSettings(Dependencies.shared)
+  .jsSettings(Dependencies.shared)
   .jsSettings(commonBuildSettings)
   .jvmSettings(commonBuildSettings)
 
