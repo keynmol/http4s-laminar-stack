@@ -16,12 +16,13 @@ import org.http4s.Uri
 import org.http4s.circe.CirceEntityEncoder._
 import org.http4s.dsl._
 import org.http4s.implicits._
+import org.http4s.StaticFile
 
 object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
   override type Res = Probe
   override def sharedResource: Resource[IO, Res] = Blocker[IO].map(Probe(_))
 
-  val classloader = Thread.currentThread().getContextClassLoader()
+  val classloader = StaticFile.getClass().getClassLoader()
 
   test("serves frontend from specified resource file") { probe =>
     probe
