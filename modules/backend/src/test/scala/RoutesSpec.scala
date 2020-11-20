@@ -21,7 +21,7 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
   override type Res = Probe
   override def sharedResource: Resource[IO, Res] = Blocker[IO].map(Probe(_))
 
-  override def maxParallelism: Int = 1
+  val classloader = Thread.currentThread().getContextClassLoader()
 
   test("serves frontend from specified resource file") { probe =>
     probe
@@ -89,7 +89,7 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
   }
 
   private def read(path: String) = Source
-    .fromResource(path)
+    .fromResource(path, classloader)
     .mkString
 
   implicit class RespOps(resp: Response[IO]) {
