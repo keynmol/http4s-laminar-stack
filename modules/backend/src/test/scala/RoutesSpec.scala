@@ -2,13 +2,12 @@ package example.backend
 
 import scala.io.Source
 
-import _root_.io.circe.syntax._
 import cats.effect.Blocker
 import cats.effect.ContextShift
 import cats.effect.IO
 import cats.effect.Resource
 import cats.effect.Timer
-import example.shared.Protocol
+
 import org.http4s.Method
 import org.http4s.Request
 import org.http4s.Response
@@ -16,20 +15,24 @@ import org.http4s.Uri
 import org.http4s.circe.CirceEntityEncoder._
 import org.http4s.dsl._
 import org.http4s.implicits._
-import org.http4s.StaticFile
+
+import _root_.io.circe.syntax._
+import example.shared.Protocol
 
 object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
   override type Res = Probe
-  override def sharedResource: Resource[IO, Res] = Blocker[IO].map(Probe(_))
+  override def sharedResource: Resource[IO, Res] =
+    Blocker[IO].map(Probe(_))
 
   test("serves frontend from specified resource file") { probe =>
     probe
       .copy(frontendFile = "frontend.js")
       .get(uri"/frontend/app.js")
-      .map { response =>
+      .zipWithBody
+      .map { case (response, responseBody) =>
         expect.all(
           response.status.code == 200,
-          response.readBody == probe.read("frontend.js")
+          responseBody == probe.read("frontend.js")
         )
       }
   }
@@ -37,10 +40,11 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
   test("serves assets with allowed extensions") { probe =>
     probe
       .get(uri"/assets/allowed.css")
-      .map { response =>
+      .zipWithBody
+      .map { case (response, responseBody) =>
         expect.all(
           response.status.code == 200,
-          response.readBody == probe.read("assets/allowed.css")
+          responseBody == probe.read("assets/allowed.css")
         )
       }
   }
@@ -79,17 +83,21 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
           uri"/get-suggestions"
         ).withEntity(request)
       )
-      .map { response =>
+      .zipWithBody
+      .map { case (response, responseBody) =>
         expect.all(
           response.status.code == 200,
-          response.readBody == stubResponse.asJson.noSpaces
+          responseBody == stubResponse.asJson.noSpaces
         )
       }
   }
 
-  implicit class RespOps(resp: Response[IO]) {
-    def readBody: String =
-      resp.bodyAsText.compile.toVector.unsafeRunSync().mkString
+  implicit class RespOps(resp: IO[Response[IO]]) {
+    def readBody: IO[String] =
+      resp.flatMap(_.bodyAsText.compile.toVector.map(_.mkString))
+
+    def zipWithBody: IO[(Response[IO], String)] =
+      resp.parProduct(readBody)
   }
 
 }
@@ -105,9 +113,10 @@ case class Probe(
 
   val classloader = getClass().getClassLoader()
 
-  def read(path: String) = Source
-    .fromResource(path, classloader)
-    .mkString
+  def read(path: String) =
+    Source
+      .fromResource(path, classloader)
+      .mkString
 
   def get(uri: Uri) = routes().run(
     Request(
