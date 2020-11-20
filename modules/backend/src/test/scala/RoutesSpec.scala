@@ -33,16 +33,16 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
 //       }
 //   }
 
-//   test("serves assets with allowed extensions") { probe =>
-//     probe
-//       .get(uri"/assets/allowed.css")
-//       .map { response =>
-//         expect.all(
-//           response.status.code == 200,
-//           response.readBody == read("assets/allowed.css")
-//         )
-//       }
-//   }
+  test("serves assets with allowed extensions") { probe =>
+    probe
+      .get(uri"/assets/allowed.css")
+      .map { response =>
+        expect.all(
+          response.status.code == 200,
+          response.readBody == read("assets/allowed.css")
+        )
+      }
+  }
 
   test("returns 404 for assets with with disallowed extensions") { probe =>
     probe
