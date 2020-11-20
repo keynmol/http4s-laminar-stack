@@ -1,6 +1,7 @@
 package example.backend
 
 import cats.effect.IO
+
 import example.shared.Protocol.GetSuggestions
 
 trait Service {

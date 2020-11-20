@@ -3,14 +3,20 @@ package example.backend
 import scala.concurrent.duration._
 
 import cats.effect._
-import example.shared.Protocol._
+
 import org.http4s.HttpRoutes
 import org.http4s.StaticFile
 import org.http4s.circe.CirceEntityDecoder._
 import org.http4s.circe.CirceEntityEncoder._
 import org.http4s.dsl.io._
 
-class Routes(service: Service, blocker: Blocker, frontendJS: String)(implicit
+import example.shared.Protocol._
+
+class Routes(
+    service: Service,
+    blocker: Blocker,
+    frontendJS: String
+)(implicit
     timer: Timer[IO],
     cs: ContextShift[IO]
 ) {

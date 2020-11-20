@@ -4,6 +4,7 @@ import scala.concurrent.Future
 
 import cats.effect.IO
 import cats.effect.Resource
+
 import com.raquo.laminar.api.L._
 import example.shared.Protocol.GetSuggestions.Response
 import org.scalajs.dom

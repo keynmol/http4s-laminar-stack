@@ -72,6 +72,7 @@ lazy val backend = (project in file("modules/backend"))
   .enablePlugins(JavaAppPackaging)
   .enablePlugins(DockerPlugin)
   .settings(
+    fork in Test := true,
     mappings in Universal += {
       val appJs = (frontend / Compile / fullOptJS).value.data
       appJs -> ("lib/prod.js")
