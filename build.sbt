@@ -10,7 +10,7 @@ val V = new {
   val decline          = "1.3.0"
   val organiseImports  = "0.4.0"
   val betterMonadicFor = "0.3.1"
-  val weaver           = "0.6.0-M1"
+  val weaver           = "0.6.0-M6"
 }
 
 val Dependencies = new {
