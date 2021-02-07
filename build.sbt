@@ -6,8 +6,8 @@ val V = new {
   val laminar          = "0.11.0"
   val http4s           = "0.21.9"
   val sttp             = "2.2.9"
-  val circe            = "0.13.0"
   val decline          = "1.3.0"
+  val zioJson          = "0.1"
   val organiseImports  = "0.4.0"
   val betterMonadicFor = "0.3.1"
   val weaver           = "0.5.0"
@@ -32,7 +32,7 @@ val Dependencies = new {
   )
 
   lazy val shared = Def.settings(
-    libraryDependencies += "io.circe" %%% "circe-generic" % V.circe
+    libraryDependencies += "dev.zio" %%% "zio-json" % V.zioJson
   )
 
   lazy val tests = Def.settings(

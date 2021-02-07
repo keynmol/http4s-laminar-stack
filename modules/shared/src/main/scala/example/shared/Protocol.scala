@@ -1,16 +1,18 @@
 package example.shared
 
+import zio.json._
+
 object Protocol {
   object GetSuggestions {
 
-    case class Request(search: String, prefixOnly: Option[Boolean] = None)
+    final case class Request(search: String, prefixOnly: Option[Boolean] = None)
     object Request {
-      implicit val codec = io.circe.generic.semiauto.deriveCodec[Request]
+      implicit final val codec: JsonCodec[Request] = DeriveJsonCodec.gen
     }
 
-    case class Response(suggestions: Seq[String])
+    final case class Response(suggestions: Seq[String])
     object Response {
-      implicit val codec = io.circe.generic.semiauto.deriveCodec[Response]
+      implicit final val codec: JsonCodec[Response] = DeriveJsonCodec.gen
     }
   }
 }
