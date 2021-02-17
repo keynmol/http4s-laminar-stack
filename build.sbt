@@ -1,16 +1,16 @@
 val V = new {
-  val Scala      = "2.13.3"
+  val Scala      = "2.13.4"
   val ScalaGroup = "2.13"
 
-  val cats             = "2.1.1"
+  val cats             = "2.4.1"
   val laminar          = "0.11.0"
-  val http4s           = "0.21.9"
+  val http4s           = "0.21.19"
   val sttp             = "2.2.9"
   val circe            = "0.13.0"
   val decline          = "1.3.0"
-  val organiseImports  = "0.4.0"
+  val organiseImports  = "0.5.0"
   val betterMonadicFor = "0.3.1"
-  val weaver           = "0.5.0"
+  val weaver           = "0.6.0-M6"
 }
 
 val Dependencies = new {
@@ -36,8 +36,8 @@ val Dependencies = new {
   )
 
   lazy val tests = Def.settings(
-    libraryDependencies += "com.disneystreaming" %%% "weaver-framework" % V.weaver % Test,
-    testFrameworks += new TestFramework("weaver.framework.TestFramework")
+    libraryDependencies += "com.disneystreaming" %%% "weaver-cats" % V.weaver % Test,
+    testFrameworks += new TestFramework("weaver.framework.CatsEffect")
   )
 }
 

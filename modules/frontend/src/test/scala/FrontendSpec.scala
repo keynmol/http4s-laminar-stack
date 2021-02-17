@@ -2,6 +2,9 @@ package example.frontend
 
 import scala.collection.mutable
 
+import cats.effect._
+import cats.syntax.all._
+
 import weaver._
 
 /** Don't get me wrong - this is a very gratuitous use of IO
@@ -11,7 +14,7 @@ import weaver._
   */
 object ClientSpec extends SimpleIOSuite with Harness {
 
-  simpleTest("client respects `prefix only` checkbox") {
+  test("client respects `prefix only` checkbox") {
 
     val calls = mutable.ListBuffer.empty[(String, Boolean)]
 
@@ -25,10 +28,11 @@ object ClientSpec extends SimpleIOSuite with Harness {
       testApp.prefixFilter.click()
 
       expect(calls.toList == List("" -> false, "" -> true, "" -> false))
+        .pure[IO]
     }
   }
 
-  simpleTest("respects `search` input") {
+  test("respects `search` input") {
     val calls = mutable.ListBuffer.empty[(String, Boolean)]
 
     val api = testApi { case (s, b) =>
@@ -49,11 +53,11 @@ object ClientSpec extends SimpleIOSuite with Harness {
           "bla"       -> false,
           "something" -> false
         )
-      )
+      ).pure[IO]
     }
   }
 
-  simpleTest("renders the results correctly") {
+  test("renders the results correctly") {
     val ApiData = List("a", "b", "c", "d")
 
     val api = testApi { case (s, _) =>
@@ -72,9 +76,13 @@ object ClientSpec extends SimpleIOSuite with Harness {
       val rendered =
         ApiData.indices.map(renderedResults.apply(_).innerHTML).toList
 
-      expect(lengthBeforeInput == 0) and
-        expect(renderedResults.length == ApiData.length) and
-        expect(rendered == ApiData)
+      expect
+        .all(
+          lengthBeforeInput == 0,
+          renderedResults.length == ApiData.length,
+          rendered == ApiData
+        )
+        .pure[IO]
     }
 
   }
