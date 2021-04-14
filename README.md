@@ -27,16 +27,11 @@ And open http://localhost:9000/frontend
 This will restart the server on any changes: shared code, client/server, assets.
 
 ## Tests
-Running the tests will fail saying it cannot find js dom on first checkout. Fix this by:
+It is a prerequisite to have jsdom installed, in order for the frontend tests to run. Proposal:
 ```
 yarn add jsdom
 ```
-Then move into an sbt console 
-
-```
-yarn add jsdom
-```
-
+Then move into an sbt console and run tests as normal
 
 ## Production mode
 
