@@ -1,6 +1,5 @@
 package example.frontend
 
-import com.raquo.airstream.signal.Signal
 import com.raquo.laminar.api.L._
 import org.scalajs.dom
 
