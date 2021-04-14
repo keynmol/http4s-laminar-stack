@@ -6,10 +6,11 @@ project/target
 project/metals.sbt
 
 .bloop
+.bsp
+.vscode
+.metals
 
 *.class
-
-.metals
 
 project/project
 
@@ -21,5 +22,5 @@ modules/backend/src/main/resources/dev.js
 modules/backend/src/main/resources/prod.js
 
 node_modules
-
-.vscode
+package.json
+yarn.lock

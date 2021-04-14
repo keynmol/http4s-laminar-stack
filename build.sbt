@@ -3,7 +3,7 @@ val V = new {
   val ScalaGroup = "2.13"
 
   val cats             = "2.4.1"
-  val laminar          = "0.11.0"
+  val laminar          = "0.12.2"
   val http4s           = "0.21.19"
   val sttp             = "2.2.9"
   val circe            = "0.13.0"
@@ -12,6 +12,8 @@ val V = new {
   val betterMonadicFor = "0.3.1"
   val weaver           = "0.6.0-M6"
 }
+
+scalaVersion := V.Scala
 
 val Dependencies = new {
   private val http4sModules =
@@ -60,7 +62,7 @@ lazy val frontend = (project in file("modules/frontend"))
   .settings(
     Dependencies.frontend,
     Dependencies.tests,
-    jsEnv in Test := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
+    Test / jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
   )
   .settings(commonBuildSettings)
 
@@ -72,16 +74,16 @@ lazy val backend = (project in file("modules/backend"))
   .enablePlugins(JavaAppPackaging)
   .enablePlugins(DockerPlugin)
   .settings(
-    fork in Test := true,
-    mappings in Universal += {
+    Test / fork := true,
+    Universal / mappings += {
       val appJs = (frontend / Compile / fullOptJS).value.data
       appJs -> ("lib/prod.js")
     },
-    javaOptions in Universal ++= Seq(
+    Universal  / javaOptions ++= Seq(
       "--port 8080",
       "--mode prod"
     ),
-    packageName in Docker := "laminar-http4s-example"
+     Docker / packageName := "laminar-http4s-example"
   )
 
 lazy val shared = crossProject(JSPlatform, JVMPlatform)
