@@ -14,11 +14,7 @@ import example.shared.Protocol._
 
 class Routes(
     service: Service,
-    blocker: Blocker,
     frontendJS: String
-)(implicit
-    timer: Timer[IO],
-    cs: ContextShift[IO]
 ) {
   def routes = HttpRoutes.of[IO] {
     case request @ POST -> Root / "get-suggestions" =>
@@ -27,22 +23,22 @@ class Routes(
         result <- service.getSuggestions(req)
         // introduce a fake delay here to showcase the amazing
         // loader gif
-        resp <- Ok(result) <* timer.sleep(50.millis)
+        resp <- Ok(result) <* IO.sleep(50.millis)
       } yield resp
 
     case request @ GET -> Root / "frontend" / "app.js" =>
       StaticFile
-        .fromResource[IO](frontendJS, blocker, Some(request))
+        .fromResource[IO](frontendJS, Some(request))
         .getOrElseF(NotFound())
 
     case request @ GET -> Root / "frontend" =>
       StaticFile
-        .fromResource[IO]("index.html", blocker, Some(request))
+        .fromResource[IO]("index.html", Some(request))
         .getOrElseF(NotFound())
 
     case request @ GET -> Root / "assets" / path if staticFileAllowed(path) =>
       StaticFile
-        .fromResource("/assets/" + path, blocker, Some(request))
+        .fromResource("/assets/" + path, Some(request))
         .getOrElseF(NotFound())
   }
 

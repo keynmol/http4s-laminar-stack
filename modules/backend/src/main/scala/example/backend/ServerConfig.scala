@@ -3,10 +3,13 @@ package example.backend
 import cats.implicits._
 
 import com.monovore.decline._
+import com.comcast.ip4s.Port
+import com.comcast.ip4s.Host
+import cats.data.Validated
 
 case class ServerConfig(
-    host: String,
-    port: Int,
+    host: Host,
+    port: Port,
     mode: String
 )
 
@@ -18,8 +21,21 @@ object ServerConfig {
   private val hostOpt = Opts
     .option[String]("host", help = "Host to bind to")
     .withDefault(DefaultHost)
+    .mapValidated(raw =>
+      Validated
+        .fromOption(Host.fromString(raw), "host is invalid")
+        .toValidatedNel
+    )
+
   private val portOpt =
-    Opts.option[Int]("port", help = "Port to bind to").withDefault(DefaultPort)
+    Opts
+      .option[Int]("port", help = "Port to bind to")
+      .withDefault(DefaultPort)
+      .mapValidated(raw =>
+        Validated
+          .fromOption(Port.fromInt(raw), "port is invalid")
+          .toValidatedNel
+      )
 
   private val modeOpt = Opts
     .option[String]("mode", help = "Mode (dev or prod)")

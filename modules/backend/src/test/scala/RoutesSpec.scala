@@ -2,11 +2,8 @@ package example.backend
 
 import scala.io.Source
 
-import cats.effect.Blocker
-import cats.effect.ContextShift
 import cats.effect.IO
 import cats.effect.Resource
-import cats.effect.Timer
 
 import org.http4s.Method
 import org.http4s.Request
@@ -21,8 +18,7 @@ import example.shared.Protocol
 
 object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
   override type Res = Probe
-  override def sharedResource: Resource[IO, Res] =
-    Blocker[IO].map(Probe(_))
+  override def sharedResource: Resource[IO, Res] = Resource.pure(Probe())
 
   test("serves frontend from specified resource file") { probe =>
     probe
@@ -94,21 +90,17 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
 
   implicit class RespOps(resp: IO[Response[IO]]) {
     def readBody: IO[String] =
-      resp.flatMap(_.bodyAsText.compile.toVector.map(_.mkString))
+      resp.flatMap(_.bodyText.compile.toVector.map(_.mkString))
 
     def zipWithBody: IO[(Response[IO], String)] =
-      resp.parProduct(readBody)
+      resp.product(readBody)
   }
 
 }
 
 case class Probe(
-    blocker: Blocker,
     serviceImpl: Service = ServiceImpl,
     frontendFile: String = "test-file"
-)(implicit
-    timer: Timer[IO],
-    cs: ContextShift[IO]
 ) {
 
   val classloader = getClass().getClassLoader()
@@ -126,11 +118,11 @@ case class Probe(
   )
 
   def routes() =
-    new Routes(serviceImpl, blocker, frontendFile).routes.orNotFound
+    new Routes(serviceImpl, frontendFile).routes.orNotFound
 
   def routes(frontendJs: String) =
-    new Routes(serviceImpl, blocker, frontendJs).routes.orNotFound
+    new Routes(serviceImpl, frontendJs).routes.orNotFound
 
   def routes(service: Service, frontendJs: String) =
-    new Routes(service, blocker, frontendJs).routes.orNotFound
+    new Routes(service, frontendJs).routes.orNotFound
 }

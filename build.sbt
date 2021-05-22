@@ -1,23 +1,23 @@
 val V = new {
-  val Scala      = "2.13.4"
+  val Scala      = "2.13.6"
   val ScalaGroup = "2.13"
 
   val cats             = "2.4.1"
-  val laminar          = "0.13.0-M1"
-  val http4s           = "0.21.19"
+  val laminar          = "0.13.0"
+  val http4s           = "0.23.0-M1"
   val sttp             = "2.2.9"
   val circe            = "0.13.0"
   val decline          = "1.3.0"
   val organiseImports  = "0.5.0"
   val betterMonadicFor = "0.3.1"
-  val weaver           = "0.6.0-M6"
+  val weaver           = "0.7.3"
 }
 
 scalaVersion := V.Scala
 
 val Dependencies = new {
   private val http4sModules =
-    Seq("dsl", "blaze-client", "blaze-server", "circe").map("http4s-" + _)
+    Seq("dsl", "ember-client", "ember-server", "circe").map("http4s-" + _)
 
   private val sttpModules = Seq("core", "circe")
 
