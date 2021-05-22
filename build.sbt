@@ -79,11 +79,11 @@ lazy val backend = (project in file("modules/backend"))
       val appJs = (frontend / Compile / fullOptJS).value.data
       appJs -> ("lib/prod.js")
     },
-    Universal  / javaOptions ++= Seq(
+    Universal / javaOptions ++= Seq(
       "--port 8080",
       "--mode prod"
     ),
-     Docker / packageName := "laminar-http4s-example"
+    Docker / packageName := "laminar-http4s-example"
   )
 
 lazy val shared = crossProject(JSPlatform, JVMPlatform)

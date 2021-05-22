@@ -2,9 +2,9 @@ package example.backend
 
 import cats.effect._
 
+import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.implicits._
 import org.http4s.server.middleware.GZip
-import org.http4s.ember.server.EmberServerBuilder
 
 object Server extends IOApp {
   def resource(service: Service, config: ServerConfig) = {

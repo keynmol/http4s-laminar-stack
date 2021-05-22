@@ -1,11 +1,11 @@
 package example.backend
 
+import cats.data.Validated
 import cats.implicits._
 
-import com.monovore.decline._
-import com.comcast.ip4s.Port
 import com.comcast.ip4s.Host
-import cats.data.Validated
+import com.comcast.ip4s.Port
+import com.monovore.decline._
 
 case class ServerConfig(
     host: Host,
