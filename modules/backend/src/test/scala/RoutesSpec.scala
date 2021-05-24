@@ -16,7 +16,7 @@ import org.http4s.implicits._
 import _root_.io.circe.syntax._
 import example.shared.Protocol
 
-object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
+object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO]:
   override type Res = Probe
   override def sharedResource: Resource[IO, Res] = Resource.pure(Probe())
 
@@ -88,21 +88,17 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO] {
       }
   }
 
-  implicit class RespOps(resp: IO[Response[IO]]) {
+  extension (resp: IO[Response[IO]])
     def readBody: IO[String] =
       resp.flatMap(_.bodyText.compile.toVector.map(_.mkString))
 
     def zipWithBody: IO[(Response[IO], String)] =
       resp.product(readBody)
-  }
-
-}
 
 case class Probe(
     serviceImpl: Service = ServiceImpl,
     frontendFile: String = "test-file"
-) {
-
+):
   val classloader = getClass().getClassLoader()
 
   def read(path: String) =
@@ -125,4 +121,3 @@ case class Probe(
 
   def routes(service: Service, frontendJs: String) =
     new Routes(service, frontendJs).routes.orNotFound
-}

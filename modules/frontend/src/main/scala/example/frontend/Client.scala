@@ -3,11 +3,12 @@ package example.frontend
 import com.raquo.laminar.api.L._
 import org.scalajs.dom
 
-object Client {
+object Client:
 
   case class SearchBox private (node: Element, signal: Signal[String])
-  object SearchBox {
-    def create = {
+
+  object SearchBox:
+    def create =
       val node = input(
         `type` := "text",
         idAttr := "search-filter"
@@ -17,12 +18,11 @@ object Client {
         node.events(onInput).mapTo(node.ref.value).startWith("")
 
       new SearchBox(node, stream)
-    }
-  }
 
   case class PrefixOnlyCheckbox private (node: Element, signal: Signal[Boolean])
-  object PrefixOnlyCheckbox {
-    def create = {
+
+  object PrefixOnlyCheckbox:
+    def create =
       val node = input(
         `type` := "checkbox",
         idAttr := "prefix-only-filter"
@@ -35,10 +35,8 @@ object Client {
           .startWith(node.ref.checked)
 
       new PrefixOnlyCheckbox(node, stream)
-    }
-  }
 
-  def app(api: Api, debounce: Int = 250) = {
+  def app(api: Api, debounce: Int = 250) =
     val searchBox  = SearchBox.create
     val prefixOnly = PrefixOnlyCheckbox.create
 
@@ -69,12 +67,9 @@ object Client {
       div("Prefix only", prefixOnly.node),
       results
     )
+  end app
 
-  }
-
-  def main(args: Array[String]): Unit = {
+  def main(args: Array[String]): Unit =
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(dom.document.getElementById("appContainer"), app(FutureApi))
     }(unsafeWindowOwner)
-  }
-}

@@ -15,7 +15,7 @@ import example.shared.Protocol._
 class Routes(
     service: Service,
     frontendJS: String
-) {
+):
   def routes = HttpRoutes.of[IO] {
     case request @ POST -> Root / "get-suggestions" =>
       for {
@@ -44,5 +44,3 @@ class Routes(
 
   private def staticFileAllowed(path: String) =
     List(".gif", ".js", ".css", ".map", ".html", ".webm").exists(path.endsWith)
-
-}

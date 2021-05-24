@@ -13,7 +13,7 @@ case class ServerConfig(
     mode: String
 )
 
-object ServerConfig {
+object ServerConfig:
   private val DefaultHost = "0.0.0.0"
   private val DefaultPort = 9000
   private val DefaultMode = "dev"
@@ -46,4 +46,3 @@ object ServerConfig {
     Command("", "Run backend and assets server")(
       (hostOpt, portOpt, modeOpt).mapN(ServerConfig.apply)
     )
-}

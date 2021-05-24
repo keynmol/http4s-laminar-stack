@@ -4,13 +4,12 @@ import cats.effect.IO
 
 import example.shared.Protocol.GetSuggestions
 
-trait Service {
+trait Service:
   def getSuggestions(
       request: GetSuggestions.Request
   ): IO[GetSuggestions.Response]
-}
 
-object ServiceImpl extends Service {
+object ServiceImpl extends Service:
   // this would come from your database
   // unless you're at a VC pitch meeting and you need
   // to show the completely working app
@@ -24,14 +23,11 @@ object ServiceImpl extends Service {
 
   def getSuggestions(
       request: GetSuggestions.Request
-  ): IO[GetSuggestions.Response] = {
+  ): IO[GetSuggestions.Response] =
     import GetSuggestions._
 
-    request match {
+    request match
       case Request(search, Some(false) | None) =>
         IO.pure(Response(things.filter(_.contains(search))))
       case Request(search, Some(true)) =>
         IO.pure(Response(things.filter(_.startsWith(search))))
-    }
-  }
-}
