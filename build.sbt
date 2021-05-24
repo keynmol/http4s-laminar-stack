@@ -5,7 +5,7 @@ val V = new {
   val cats             = "2.4.1"
   val laminar          = "0.13.0"
   val http4s           = "0.23.0-M1"
-  val sttp             = "2.2.9"
+  val sttp             = "3.3.4"
   val circe            = "0.13.0"
   val decline          = "1.3.0"
   val organiseImports  = "0.5.0"
@@ -23,8 +23,8 @@ val Dependencies = new {
 
   lazy val frontend = Seq(
     libraryDependencies ++=
-      sttpModules.map("com.softwaremill.sttp.client" %%% _         % V.sttp) ++
-        Seq("com.raquo"                              %%% "laminar" % V.laminar)
+      sttpModules.map("com.softwaremill.sttp.client3" %%% _         % V.sttp) ++
+        Seq("com.raquo"                               %%% "laminar" % V.laminar)
   )
 
   lazy val backend = Seq(
