@@ -30,7 +30,7 @@ val Dependencies = new {
     libraryDependencies ++=
       http4sModules.map("org.http4s" %% _ % V.http4s) ++
         Seq(
-          "com.monovore" %% "decline" % V.decline cross CrossVersion.for3Use2_13
+          "com.monovore" %% "decline" % V.decline cross CrossVersion.for3Use2_13 exclude ("org.typelevel", "cats-core_2.13")
         )
   )
 

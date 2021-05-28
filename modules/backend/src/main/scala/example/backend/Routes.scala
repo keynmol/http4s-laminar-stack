@@ -21,8 +21,12 @@ class Routes(
   def routes = HttpRoutes.of[IO] {
     case request @ POST -> Root / "get-suggestions" =>
       for {
-        req <- circeEntityDecoder[IO, GetSuggestions.Request].decode(request, strict = true).value
-        result <- service.getSuggestions(req.getOrElse(throw new RuntimeException("what")))
+        req <- circeEntityDecoder[IO, GetSuggestions.Request]
+          .decode(request, strict = true)
+          .value
+        result <- service.getSuggestions(
+          req.getOrElse(throw new RuntimeException("what"))
+        )
         // introduce a fake delay here to showcase the amazing
         // loader gif
         resp <- Ok(result) <* IO.sleep(50.millis)
