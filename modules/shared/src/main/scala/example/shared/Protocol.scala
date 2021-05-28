@@ -1,16 +1,15 @@
 package example.shared
 
-object Protocol {
-  object GetSuggestions {
+import io.circe.{Decoder, Encoder}
 
-    case class Request(search: String, prefixOnly: Option[Boolean] = None)
-    object Request {
-      implicit val codec = io.circe.generic.semiauto.deriveCodec[Request]
-    }
+object Protocol:
+  object GetSuggestions:
+
+    case class Request(
+        search: String,
+        prefixOnly: Option[Boolean] = None
+    ) derives Decoder, Encoder.AsObject
 
     case class Response(suggestions: Seq[String])
-    object Response {
-      implicit val codec = io.circe.generic.semiauto.deriveCodec[Response]
-    }
-  }
-}
+        derives Decoder,
+          Encoder.AsObject

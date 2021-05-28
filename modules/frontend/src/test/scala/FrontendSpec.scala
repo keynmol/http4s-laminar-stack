@@ -7,8 +7,8 @@ import cats.syntax.all._
 
 import weaver._
 
-/** Don't get me wrong - this is a very gratuitous use of IO
-  * and weaver's abilities.
+/** Don't get me wrong - this is a very gratuitous use of IO and weaver's
+  * abilities.
   *
   * But I will still do it, because why not :)
   */

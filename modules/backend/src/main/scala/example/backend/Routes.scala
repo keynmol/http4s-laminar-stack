@@ -8,45 +8,45 @@ import org.http4s.HttpRoutes
 import org.http4s.StaticFile
 import org.http4s.circe.CirceEntityDecoder._
 import org.http4s.circe.CirceEntityEncoder._
-import org.http4s.dsl.io._
 
 import example.shared.Protocol._
+import org.http4s.circe.CirceEntityDecoder
+import cats._
+import org.http4s.dsl.Http4sDsl
 
 class Routes(
     service: Service,
-    blocker: Blocker,
     frontendJS: String
-)(implicit
-    timer: Timer[IO],
-    cs: ContextShift[IO]
-) {
+) extends Http4sDsl[IO]:
   def routes = HttpRoutes.of[IO] {
     case request @ POST -> Root / "get-suggestions" =>
       for {
-        req    <- request.as[GetSuggestions.Request]
-        result <- service.getSuggestions(req)
+        req <- circeEntityDecoder[IO, GetSuggestions.Request]
+          .decode(request, strict = true)
+          .value
+        result <- service.getSuggestions(
+          req.getOrElse(throw new RuntimeException("what"))
+        )
         // introduce a fake delay here to showcase the amazing
         // loader gif
-        resp <- Ok(result) <* timer.sleep(50.millis)
+        resp <- Ok(result) <* IO.sleep(50.millis)
       } yield resp
 
     case request @ GET -> Root / "frontend" / "app.js" =>
       StaticFile
-        .fromResource[IO](frontendJS, blocker, Some(request))
+        .fromResource[IO](frontendJS, Some(request))
         .getOrElseF(NotFound())
 
     case request @ GET -> Root / "frontend" =>
       StaticFile
-        .fromResource[IO]("index.html", blocker, Some(request))
+        .fromResource[IO]("index.html", Some(request))
         .getOrElseF(NotFound())
 
     case request @ GET -> Root / "assets" / path if staticFileAllowed(path) =>
       StaticFile
-        .fromResource("/assets/" + path, blocker, Some(request))
+        .fromResource("/assets/" + path, Some(request))
         .getOrElseF(NotFound())
   }
 
   private def staticFileAllowed(path: String) =
     List(".gif", ".js", ".css", ".map", ".html", ".webm").exists(path.endsWith)
-
-}

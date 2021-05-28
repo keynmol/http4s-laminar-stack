@@ -1,40 +1,41 @@
 val V = new {
-  val Scala      = "2.13.4"
-  val ScalaGroup = "2.13"
+  val Scala = "3.0.0"
 
-  val cats             = "2.4.1"
-  val laminar          = "0.13.0-M1"
-  val http4s           = "0.21.19"
-  val sttp             = "2.2.9"
-  val circe            = "0.13.0"
-  val decline          = "1.3.0"
-  val organiseImports  = "0.5.0"
-  val betterMonadicFor = "0.3.1"
-  val weaver           = "0.6.0-M6"
+  val laminar         = "0.13.0"
+  val http4s          = "0.23.0-M1"
+  val sttp            = "3.3.4"
+  val circe           = "0.14.0-M7"
+  val decline         = "1.3.0"
+  val organiseImports = "0.5.0"
+  val weaver          = "0.7.3"
 }
 
 scalaVersion := V.Scala
 
 val Dependencies = new {
   private val http4sModules =
-    Seq("dsl", "blaze-client", "blaze-server", "circe").map("http4s-" + _)
+    Seq("dsl", "ember-client", "ember-server", "circe").map("http4s-" + _)
 
   private val sttpModules = Seq("core", "circe")
 
   lazy val frontend = Seq(
     libraryDependencies ++=
-      sttpModules.map("com.softwaremill.sttp.client" %%% _         % V.sttp) ++
-        Seq("com.raquo"                              %%% "laminar" % V.laminar)
+      Seq(
+        "com.softwaremill.sttp.client3" %%% "core"    % V.sttp,
+        "com.softwaremill.sttp.client3" %%% "circe"   % V.sttp cross CrossVersion.for3Use2_13
+      ) ++ Seq("com.raquo"              %%% "laminar" % V.laminar)
   )
 
   lazy val backend = Seq(
     libraryDependencies ++=
-      http4sModules.map("org.http4s" %% _         % V.http4s) ++
-        Seq("com.monovore"           %% "decline" % V.decline)
+      http4sModules.map("org.http4s" %% _ % V.http4s) ++
+        Seq(
+          "com.monovore" %% "decline" % V.decline cross CrossVersion.for3Use2_13 exclude ("org.typelevel", "cats-core_2.13")
+        )
   )
 
   lazy val shared = Def.settings(
-    libraryDependencies += "io.circe" %%% "circe-generic" % V.circe
+    libraryDependencies += "io.circe" %%% "circe-core" % V.circe
   )
 
   lazy val tests = Def.settings(
@@ -42,15 +43,6 @@ val Dependencies = new {
     testFrameworks += new TestFramework("weaver.framework.CatsEffect")
   )
 }
-
-inThisBuild(
-  Seq(
-    scalafixDependencies += "com.github.liancheng" %% "organize-imports" % V.organiseImports,
-    semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision,
-    scalafixScalaBinaryVersion := V.ScalaGroup
-  )
-)
 
 lazy val root =
   (project in file(".")).aggregate(frontend, backend, shared.js, shared.jvm)
@@ -79,11 +71,11 @@ lazy val backend = (project in file("modules/backend"))
       val appJs = (frontend / Compile / fullOptJS).value.data
       appJs -> ("lib/prod.js")
     },
-    Universal  / javaOptions ++= Seq(
+    Universal / javaOptions ++= Seq(
       "--port 8080",
       "--mode prod"
     ),
-     Docker / packageName := "laminar-http4s-example"
+    Docker / packageName := "laminar-http4s-example"
   )
 
 lazy val shared = crossProject(JSPlatform, JVMPlatform)
@@ -118,11 +110,10 @@ fullOptCompileCopy := {
 }
 
 lazy val commonBuildSettings: Seq[Def.Setting[_]] = Seq(
-  scalaVersion := V.Scala,
-  addCompilerPlugin("com.olegpy" %% "better-monadic-for" % V.betterMonadicFor),
-  scalacOptions ++= Seq(
-    "-Ywarn-unused"
-  )
+  scalaVersion := V.Scala
+  /* scalacOptions ++= Seq( */
+  /*   "-Ywarn-unused" */
+  /* ) */
 )
 
 addCommandAlias("runDev", ";fastOptCompileCopy; backend/reStart --mode dev")
@@ -148,8 +139,8 @@ val CICommands = Seq(
 ).mkString(";")
 
 val PrepareCICommands = Seq(
-  s"compile:scalafix --rules $scalafixRules",
-  s"test:scalafix --rules $scalafixRules",
+  /* s"compile:scalafix --rules $scalafixRules", */
+  /* s"test:scalafix --rules $scalafixRules", */
   "test:scalafmtAll",
   "compile:scalafmtAll",
   "scalafmtSbt"
