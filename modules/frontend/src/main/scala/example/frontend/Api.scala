@@ -3,9 +3,9 @@ package example.frontend
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-import example.shared.Protocol._
-import sttp.client3._
-import sttp.client3.circe._
+import example.shared.Protocol.*
+import sttp.client3.*
+import sttp.client3.circe.*
 import sttp.capabilities.WebSockets
 
 trait Api:
@@ -36,3 +36,4 @@ object FutureApi extends Api:
       .response(asJson[GetSuggestions.Response])
 
     req.send(backend).map(_.body)
+end FutureApi

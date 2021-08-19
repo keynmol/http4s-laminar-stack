@@ -8,7 +8,8 @@ object Protocol:
     case class Request(
         search: String,
         prefixOnly: Option[Boolean] = None
-    ) derives Decoder, Encoder.AsObject
+    ) derives Decoder,
+          Encoder.AsObject
 
     case class Response(suggestions: Seq[String])
         derives Decoder,

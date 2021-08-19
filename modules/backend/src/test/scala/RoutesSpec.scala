@@ -9,11 +9,11 @@ import org.http4s.Method
 import org.http4s.Request
 import org.http4s.Response
 import org.http4s.Uri
-import org.http4s.circe.CirceEntityEncoder._
-import org.http4s.dsl._
-import org.http4s.implicits._
+import org.http4s.circe.CirceEntityEncoder.*
+import org.http4s.dsl.*
+import org.http4s.implicits.*
 
-import _root_.io.circe.syntax._
+import _root_.io.circe.syntax.*
 import example.shared.Protocol
 
 object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO]:
@@ -56,17 +56,16 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO]:
   }
 
   test("calls the service on /get-suggestions") { probe =>
-    import Protocol.{GetSuggestions => GS}
+    import Protocol.{GetSuggestions as GS}
 
     val stubResponse = GS.Response(
       Seq("a", "b", "c", "d")
     )
 
-    val serviceImpl = new Service {
+    val serviceImpl = new Service:
       override def getSuggestions(
           request: GS.Request
       ): IO[GS.Response] = IO(stubResponse)
-    }
 
     val request = GS.Request("hello!")
 
@@ -94,6 +93,7 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO]:
 
     def zipWithBody: IO[(Response[IO], String)] =
       resp.product(readBody)
+end RoutesSpec
 
 case class Probe(
     serviceImpl: Service = ServiceImpl,
@@ -121,3 +121,4 @@ case class Probe(
 
   def routes(service: Service, frontendJs: String) =
     new Routes(service, frontendJs).routes.orNotFound
+end Probe

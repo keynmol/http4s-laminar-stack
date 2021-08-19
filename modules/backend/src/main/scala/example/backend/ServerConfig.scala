@@ -1,11 +1,11 @@
 package example.backend
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 
 import com.comcast.ip4s.Host
 import com.comcast.ip4s.Port
-import com.monovore.decline._
+import com.monovore.decline.*
 
 case class ServerConfig(
     host: Host,
@@ -46,3 +46,4 @@ object ServerConfig:
     Command("", "Run backend and assets server")(
       (hostOpt, portOpt, modeOpt).mapN(ServerConfig.apply)
     )
+end ServerConfig

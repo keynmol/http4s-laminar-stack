@@ -1,9 +1,9 @@
 package example.backend
 
-import cats.effect._
+import cats.effect.*
 
 import org.http4s.ember.server.EmberServerBuilder
-import org.http4s.implicits._
+import org.http4s.implicits.*
 import org.http4s.server.middleware.GZip
 
 object Server extends IOApp:
@@ -34,3 +34,4 @@ object Server extends IOApp:
         resource(ServiceImpl, config)
           .use(_ => status *> IO.never)
           .as(ExitCode.Success)
+end Server

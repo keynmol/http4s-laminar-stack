@@ -5,7 +5,7 @@ import scala.concurrent.Future
 import cats.effect.IO
 import cats.effect.Resource
 
-import com.raquo.laminar.api.L._
+import com.raquo.laminar.api.L.*
 import example.shared.Protocol.GetSuggestions.Response
 import org.scalajs.dom
 import org.scalajs.dom.raw.Event
@@ -22,9 +22,8 @@ trait Harness:
       inp.dispatchEvent(
         new Event(
           "input",
-          new EventInit {
+          new EventInit:
             bubbles = true
-          }
         )
       )
 
@@ -64,3 +63,4 @@ trait Harness:
           prefixOnly: Boolean
       ): Future[Either[Throwable, Response]] =
         Future.successful(f(search, prefixOnly).map(Response.apply))
+end Harness

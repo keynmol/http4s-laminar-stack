@@ -1,6 +1,6 @@
 package example.frontend
 
-import com.raquo.laminar.api.L._
+import com.raquo.laminar.api.L.*
 import org.scalajs.dom
 
 object Client:
@@ -35,13 +35,14 @@ object Client:
           .startWith(node.ref.checked)
 
       new PrefixOnlyCheckbox(node, stream)
+  end PrefixOnlyCheckbox
 
   def app(api: Api, debounce: Int = 250) =
     val searchBox  = SearchBox.create
     val prefixOnly = PrefixOnlyCheckbox.create
 
     val debounced =
-      if (debounce > 0)
+      if debounce > 0 then
         searchBox.signal
           .combineWith(prefixOnly.signal)
           .composeChanges(_.debounce(debounce))
@@ -73,3 +74,4 @@ object Client:
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(dom.document.getElementById("appContainer"), app(FutureApi))
     }(unsafeWindowOwner)
+end Client

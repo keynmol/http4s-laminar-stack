@@ -2,17 +2,17 @@ package example.frontend
 
 import scala.collection.mutable
 
-import cats.effect._
-import cats.syntax.all._
+import cats.effect.*
+import cats.syntax.all.*
 
-import weaver._
+import weaver.*
 
 /** Don't get me wrong - this is a very gratuitous use of IO and weaver's
   * abilities.
   *
   * But I will still do it, because why not :)
   */
-object ClientSpec extends SimpleIOSuite with Harness {
+object ClientSpec extends SimpleIOSuite with Harness:
 
   test("client respects `prefix only` checkbox") {
 
@@ -61,8 +61,7 @@ object ClientSpec extends SimpleIOSuite with Harness {
     val ApiData = List("a", "b", "c", "d")
 
     val api = testApi { case (s, _) =>
-      if (s == "test")
-        Right(ApiData)
+      if s == "test" then Right(ApiData)
       else Right(Nil)
     }
 
@@ -86,4 +85,4 @@ object ClientSpec extends SimpleIOSuite with Harness {
     }
 
   }
-}
+end ClientSpec

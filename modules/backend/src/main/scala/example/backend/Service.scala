@@ -24,10 +24,11 @@ object ServiceImpl extends Service:
   def getSuggestions(
       request: GetSuggestions.Request
   ): IO[GetSuggestions.Response] =
-    import GetSuggestions._
+    import GetSuggestions.*
 
     request match
       case Request(search, Some(false) | None) =>
         IO.pure(Response(things.filter(_.contains(search))))
       case Request(search, Some(true)) =>
         IO.pure(Response(things.filter(_.startsWith(search))))
+end ServiceImpl

@@ -1,17 +1,17 @@
 package example.backend
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
-import cats.effect._
+import cats.effect.*
 
 import org.http4s.HttpRoutes
 import org.http4s.StaticFile
-import org.http4s.circe.CirceEntityDecoder._
-import org.http4s.circe.CirceEntityEncoder._
+import org.http4s.circe.CirceEntityDecoder.*
+import org.http4s.circe.CirceEntityEncoder.*
 
-import example.shared.Protocol._
+import example.shared.Protocol.*
 import org.http4s.circe.CirceEntityDecoder
-import cats._
+import cats.*
 import org.http4s.dsl.Http4sDsl
 
 class Routes(
@@ -20,7 +20,7 @@ class Routes(
 ) extends Http4sDsl[IO]:
   def routes = HttpRoutes.of[IO] {
     case request @ POST -> Root / "get-suggestions" =>
-      for {
+      for
         req <- circeEntityDecoder[IO, GetSuggestions.Request]
           .decode(request, strict = true)
           .value
@@ -30,7 +30,7 @@ class Routes(
         // introduce a fake delay here to showcase the amazing
         // loader gif
         resp <- Ok(result) <* IO.sleep(50.millis)
-      } yield resp
+      yield resp
 
     case request @ GET -> Root / "frontend" / "app.js" =>
       StaticFile
@@ -50,3 +50,4 @@ class Routes(
 
   private def staticFileAllowed(path: String) =
     List(".gif", ".js", ".css", ".map", ".html", ".webm").exists(path.endsWith)
+end Routes
