@@ -1,13 +1,13 @@
 val V = new {
-  val Scala = "3.0.0"
+  val Scala = "3.0.1"
 
   val laminar         = "0.13.0"
-  val http4s          = "0.23.0-M1"
-  val sttp            = "3.3.4"
-  val circe           = "0.14.0-M7"
-  val decline         = "1.3.0"
+  val http4s          = "0.23.0"
+  val sttp            = "3.3.13"
+  val circe           = "0.14.1"
+  val decline         = "2.1.0"
   val organiseImports = "0.5.0"
-  val weaver          = "0.7.3"
+  val weaver          = "0.7.4"
 }
 
 scalaVersion := V.Scala
@@ -22,16 +22,15 @@ val Dependencies = new {
     libraryDependencies ++=
       Seq(
         "com.softwaremill.sttp.client3" %%% "core"    % V.sttp,
-        "com.softwaremill.sttp.client3" %%% "circe"   % V.sttp cross CrossVersion.for3Use2_13
-      ) ++ Seq("com.raquo"              %%% "laminar" % V.laminar)
+        "com.softwaremill.sttp.client3" %%% "circe"   % V.sttp,
+        "com.raquo"                     %%% "laminar" % V.laminar
+      )
   )
 
   lazy val backend = Seq(
     libraryDependencies ++=
-      http4sModules.map("org.http4s" %% _ % V.http4s) ++
-        Seq(
-          "com.monovore" %% "decline" % V.decline cross CrossVersion.for3Use2_13 exclude ("org.typelevel", "cats-core_2.13")
-        )
+      http4sModules.map("org.http4s" %% _         % V.http4s) ++
+        Seq("com.monovore"           %% "decline" % V.decline)
   )
 
   lazy val shared = Def.settings(
@@ -66,7 +65,7 @@ lazy val backend = (project in file("modules/backend"))
   .enablePlugins(JavaAppPackaging)
   .enablePlugins(DockerPlugin)
   .settings(
-    Test / fork := true,
+    Test / fork          := true,
     Universal / mappings += {
       val appJs = (frontend / Compile / fullOptJS).value.data
       appJs -> ("lib/prod.js")
@@ -111,9 +110,6 @@ fullOptCompileCopy := {
 
 lazy val commonBuildSettings: Seq[Def.Setting[_]] = Seq(
   scalaVersion := V.Scala
-  /* scalacOptions ++= Seq( */
-  /*   "-Ywarn-unused" */
-  /* ) */
 )
 
 addCommandAlias("runDev", ";fastOptCompileCopy; backend/reStart --mode dev")
@@ -139,8 +135,6 @@ val CICommands = Seq(
 ).mkString(";")
 
 val PrepareCICommands = Seq(
-  /* s"compile:scalafix --rules $scalafixRules", */
-  /* s"test:scalafix --rules $scalafixRules", */
   "test:scalafmtAll",
   "compile:scalafmtAll",
   "scalafmtSbt"
