@@ -1,13 +1,13 @@
 val V = new {
-  val Scala = "3.0.1"
+  val Scala = "3.0.2"
 
-  val laminar         = "0.13.0"
-  val http4s          = "0.23.0"
+  val laminar         = "0.13.1"
+  val http4s          = "0.23.4"
   val sttp            = "3.3.13"
   val circe           = "0.14.1"
   val decline         = "2.1.0"
   val organiseImports = "0.5.0"
-  val weaver          = "0.7.4"
+  val weaver          = "0.7.6"
 }
 
 scalaVersion := V.Scala
@@ -23,7 +23,8 @@ val Dependencies = new {
       Seq(
         "com.softwaremill.sttp.client3" %%% "core"    % V.sttp,
         "com.softwaremill.sttp.client3" %%% "circe"   % V.sttp,
-        "com.raquo"                     %%% "laminar" % V.laminar
+        "com.raquo"                     %%% "laminar" % V.laminar,
+        "org.scalameta"                 %%% "munit"   % "0.7.29" % Test
       )
   )
 
