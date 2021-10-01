@@ -23,8 +23,7 @@ val Dependencies = new {
       Seq(
         "com.softwaremill.sttp.client3" %%% "core"    % V.sttp,
         "com.softwaremill.sttp.client3" %%% "circe"   % V.sttp,
-        "com.raquo"                     %%% "laminar" % V.laminar,
-        "org.scalameta"                 %%% "munit"   % "0.7.29" % Test
+        "com.raquo"                     %%% "laminar" % V.laminar
       )
   )
 
@@ -66,7 +65,7 @@ lazy val backend = (project in file("modules/backend"))
   .enablePlugins(JavaAppPackaging)
   .enablePlugins(DockerPlugin)
   .settings(
-    Test / fork          := true,
+    Test / fork := true,
     Universal / mappings += {
       val appJs = (frontend / Compile / fullOptJS).value.data
       appJs -> ("lib/prod.js")
@@ -85,6 +84,10 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .jsSettings(Dependencies.shared)
   .jsSettings(commonBuildSettings)
   .jvmSettings(commonBuildSettings)
+
+ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.5.0"
+ThisBuild / semanticdbEnabled := true
+ThisBuild / scalacOptions += "-Wunused"
 
 lazy val fastOptCompileCopy = taskKey[Unit]("")
 
@@ -120,7 +123,6 @@ val scalafixRules = Seq(
   "OrganizeImports",
   "DisableSyntax",
   "LeakingImplicitClassVal",
-  "ProcedureSyntax",
   "NoValInForComprehension"
 ).mkString(" ")
 
@@ -136,9 +138,9 @@ val CICommands = Seq(
 ).mkString(";")
 
 val PrepareCICommands = Seq(
-  "test:scalafmtAll",
-  "compile:scalafmtAll",
-  "scalafmtSbt"
+  "scalafmtAll",
+  "scalafmtSbt",
+  s"scalafix $scalafixRules"
 ).mkString(";")
 
 addCommandAlias("ci", CICommands)

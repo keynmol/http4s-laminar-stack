@@ -2,17 +2,17 @@ package example.backend
 
 import scala.concurrent.duration.*
 
+import cats.*
 import cats.effect.*
 
 import org.http4s.HttpRoutes
 import org.http4s.StaticFile
+import org.http4s.circe.CirceEntityDecoder
 import org.http4s.circe.CirceEntityDecoder.*
 import org.http4s.circe.CirceEntityEncoder.*
+import org.http4s.dsl.Http4sDsl
 
 import example.shared.Protocol.*
-import org.http4s.circe.CirceEntityDecoder
-import cats.*
-import org.http4s.dsl.Http4sDsl
 
 class Routes(
     service: Service,

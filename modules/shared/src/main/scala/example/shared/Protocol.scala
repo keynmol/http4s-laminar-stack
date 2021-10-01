@@ -1,6 +1,7 @@
 package example.shared
 
-import io.circe.{Decoder, Encoder}
+import io.circe.Decoder
+import io.circe.Encoder
 
 object Protocol:
   object GetSuggestions:
