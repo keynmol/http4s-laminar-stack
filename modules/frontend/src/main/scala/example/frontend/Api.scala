@@ -4,9 +4,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 import example.shared.Protocol.*
+import sttp.capabilities.WebSockets
 import sttp.client3.*
 import sttp.client3.circe.*
-import sttp.capabilities.WebSockets
 
 trait Api:
   def post(
