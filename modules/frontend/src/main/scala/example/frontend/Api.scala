@@ -1,18 +1,19 @@
 package example.frontend
 
+import scala.concurrent.Future
+
 import cats.effect.IO
 import cats.effect.unsafe.implicits.*
 
-import scala.concurrent.Future
-
-import example.shared.Protocol.*
-import org.http4s.client.Client
-import org.http4s.client.dsl.io.*
 import org.http4s.Method.*
 import org.http4s.Uri
 import org.http4s.circe.CirceEntityCodec.*
+import org.http4s.client.Client
+import org.http4s.client.dsl.io.*
 import org.http4s.dom.FetchClientBuilder
 import org.http4s.syntax.all.*
+
+import example.shared.Protocol.*
 
 trait Api:
   def post(
