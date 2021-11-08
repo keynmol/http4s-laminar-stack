@@ -1,9 +1,9 @@
 val V = new {
-  val Scala = "3.0.2"
+  val Scala = "3.1.0"
 
-  val laminar         = "0.13.1"
-  val http4s          = "0.23.4"
-  val sttp            = "3.3.13"
+  val laminar         = "0.14.0"
+  val http4s          = "0.23.6"
+  val http4sDom       = "0.2.0"
   val circe           = "0.14.1"
   val decline         = "2.1.0"
   val organiseImports = "0.5.0"
@@ -21,9 +21,10 @@ val Dependencies = new {
   lazy val frontend = Seq(
     libraryDependencies ++=
       Seq(
-        "com.softwaremill.sttp.client3" %%% "core"    % V.sttp,
-        "com.softwaremill.sttp.client3" %%% "circe"   % V.sttp,
-        "com.raquo"                     %%% "laminar" % V.laminar
+        "org.http4s" %%% "http4s-client" % V.http4s,
+        "org.http4s" %%% "http4s-circe"  % V.http4s,
+        "org.http4s" %%% "http4s-dom"    % V.http4sDom,
+        "com.raquo"  %%% "laminar"       % V.laminar
       )
   )
 
@@ -87,7 +88,7 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
 
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.5.0"
 ThisBuild / semanticdbEnabled := true
-ThisBuild / scalacOptions += "-Wunused"
+ThisBuild / scalacOptions += "-Wunused:all"
 
 lazy val fastOptCompileCopy = taskKey[Unit]("")
 
