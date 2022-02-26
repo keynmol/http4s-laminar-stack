@@ -1,0 +1,6 @@
+//> using scala "3.1.0"
+//> using platform "scala-js"
+//> using lib "org.http4s::http4s-client::0.23.8"
+//> using lib "org.http4s::http4s-circe::0.23.8"
+//> using lib "org.http4s::http4s-dom::0.2.0"
+//> using lib "com.raquo::laminar::0.14.0"

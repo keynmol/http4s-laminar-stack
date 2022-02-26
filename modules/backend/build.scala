@@ -1,0 +1,6 @@
+//> using scala "3.1.0"
+//> using lib "org.http4s::http4s-ember-server::0.23.8"
+//> using lib "org.http4s::http4s-circe::0.23.8"
+//> using lib "org.http4s::http4s-dsl::0.23.8"
+//> using lib "com.monovore::decline::2.1.0"
+//> using resourceDir "src/main/resources"

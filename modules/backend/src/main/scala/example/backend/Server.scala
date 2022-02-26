@@ -1,6 +1,7 @@
 package example.backend
 
 import cats.effect.*
+import cats.effect.std.Console
 
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.implicits.*

@@ -1,9 +1,19 @@
 {
   "private": true,
   "version": "0.0.0",
-  "dependencies": {},
   "devDependencies": {
-    "jsdom": "^16.3.0"
+    "jsdom": "^16.3.0",
+    "npm-run-all": "^4.1.5"
   },
-  "scripts": {}
+  "scripts": {
+    "test-frontend": "scala-cli test modules/frontend/ modules/shared/",
+    "test-backend": "scala-cli test modules/backend/ modules/shared/",
+    "test": "npm run test-backend",
+    "start-frontend": "scala-cli package --watch --force --output modules/backend/src/main/resources/dev.js modules/frontend/ modules/shared/",
+    "start-backend": "scala-cli run --watch modules/backend/ modules/shared/",
+    "start": "run-p start-frontend start-backend",
+    "build-frontend": "scala-cli package --force --js-mode release --output modules/backend/src/main/resources/prod.js modules/frontend/ modules/shared/",
+    "build-backend": "scala-cli package --docker --docker-image-repository backend modules/backend/ modules/shared/",
+    "build": "npm run build-frontend && npm run build-backend"
+  }
 }
