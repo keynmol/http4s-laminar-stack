@@ -10,7 +10,7 @@
     "test-backend": "scala-cli test modules/backend/ modules/shared/",
     "test": "npm run test-frontend && npm run test-backend",
     "start-frontend": "scala-cli package --watch --force --output modules/backend/src/main/resources/dev.js modules/frontend/ modules/shared/",
-    "start-backend": "scala-cli run --watch modules/backend/ modules/shared/",
+    "start-backend": "scala-cli run --revolver modules/backend/ modules/shared/",
     "start": "run-p start-frontend start-backend",
     "build-frontend": "scala-cli package --force --js-mode release --output modules/backend/src/main/resources/prod.js modules/frontend/ modules/shared/",
     "build-backend": "scala-cli package --docker --docker-image-repository backend modules/backend/ modules/shared/",
