@@ -8,7 +8,7 @@
   "scripts": {
     "test-frontend": "scala-cli test modules/frontend/ modules/shared/",
     "test-backend": "scala-cli test modules/backend/ modules/shared/",
-    "test": "npm run test-backend",
+    "test": "npm run test-frontend && npm run test-backend",
     "start-frontend": "scala-cli package --watch --force --output modules/backend/src/main/resources/dev.js modules/frontend/ modules/shared/",
     "start-backend": "scala-cli run --watch modules/backend/ modules/shared/",
     "start": "run-p start-frontend start-backend",
