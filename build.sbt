@@ -1,5 +1,5 @@
 val V = new {
-  val Scala      = "2.13.4"
+  val Scala      = "2.13.8"
   val ScalaGroup = "2.13"
 
   val cats             = "2.4.1"
@@ -79,11 +79,11 @@ lazy val backend = (project in file("modules/backend"))
       val appJs = (frontend / Compile / fullOptJS).value.data
       appJs -> ("lib/prod.js")
     },
-    Universal  / javaOptions ++= Seq(
+    Universal / javaOptions ++= Seq(
       "--port 8080",
       "--mode prod"
     ),
-     Docker / packageName := "laminar-http4s-example"
+    Docker / packageName := "laminar-http4s-example"
   )
 
 lazy val shared = crossProject(JSPlatform, JVMPlatform)
