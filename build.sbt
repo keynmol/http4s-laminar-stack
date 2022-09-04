@@ -4,7 +4,7 @@ val V = new {
 
   val cats             = "2.4.1"
   val laminar          = "0.13.0-M1"
-  val http4s           = "0.21.19"
+  val http4s           = "0.21.33"
   val sttp             = "2.3.0"
   val circe            = "0.13.0"
   val decline          = "1.3.0"
