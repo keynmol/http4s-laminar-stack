@@ -1,5 +1,5 @@
 val V = new {
-  val Scala      = "2.13.4"
+  val Scala      = "2.13.9"
   val ScalaGroup = "2.13"
 
   val cats             = "2.4.1"
