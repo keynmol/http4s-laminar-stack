@@ -1,16 +1,16 @@
 val V = new {
-  val Scala      = "2.13.4"
+  val Scala      = "2.13.9"
   val ScalaGroup = "2.13"
 
   val cats             = "2.4.1"
-  val laminar          = "0.13.0-M1"
+  val laminar          = "0.13.0"
   val http4s           = "0.21.33"
-  val sttp             = "2.2.9"
-  val circe            = "0.13.0"
-  val decline          = "1.3.0"
-  val organiseImports  = "0.5.0"
+  val sttp             = "2.3.0"
+  val circe            = "0.14.2"
+  val decline          = "1.4.0"
+  val organiseImports  = "0.6.0"
   val betterMonadicFor = "0.3.1"
-  val weaver           = "0.6.0-M6"
+  val weaver           = "0.6.15"
 }
 
 scalaVersion := V.Scala
@@ -23,14 +23,14 @@ val Dependencies = new {
 
   lazy val frontend = Seq(
     libraryDependencies ++=
-      sttpModules.map("com.softwaremill.sttp.client" %%% _         % V.sttp) ++
-        Seq("com.raquo"                              %%% "laminar" % V.laminar)
+      sttpModules.map("com.softwaremill.sttp.client" %%% _ % V.sttp) ++
+        Seq("com.raquo" %%% "laminar" % V.laminar)
   )
 
   lazy val backend = Seq(
     libraryDependencies ++=
-      http4sModules.map("org.http4s" %% _         % V.http4s) ++
-        Seq("com.monovore"           %% "decline" % V.decline)
+      http4sModules.map("org.http4s" %% _ % V.http4s) ++
+        Seq("com.monovore" %% "decline" % V.decline)
   )
 
   lazy val shared = Def.settings(
@@ -46,8 +46,8 @@ val Dependencies = new {
 inThisBuild(
   Seq(
     scalafixDependencies += "com.github.liancheng" %% "organize-imports" % V.organiseImports,
-    semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision,
+    semanticdbEnabled          := true,
+    semanticdbVersion          := scalafixSemanticdb.revision,
     scalafixScalaBinaryVersion := V.ScalaGroup
   )
 )
@@ -75,9 +75,9 @@ lazy val backend = (project in file("modules/backend"))
   .enablePlugins(DockerPlugin)
   .settings(
     Test / fork := true,
-    Universal / mappings += {
+    Docker / mappings += {
       val appJs = (frontend / Compile / fullOptJS).value.data
-      appJs -> ("lib/prod.js")
+      appJs -> "/opt/docker/resources/prod.js"
     },
     Universal / javaOptions ++= Seq(
       "--port 8080",
