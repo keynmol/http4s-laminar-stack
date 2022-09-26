@@ -75,9 +75,9 @@ lazy val backend = (project in file("modules/backend"))
   .enablePlugins(DockerPlugin)
   .settings(
     Test / fork := true,
-    Universal / mappings += {
+    Docker / mappings += {
       val appJs = (frontend / Compile / fullOptJS).value.data
-      appJs -> ("lib/prod.js")
+      appJs -> "/opt/docker/resources/prod.js"
     },
     Universal / javaOptions ++= Seq(
       "--port 8080",

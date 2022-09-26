@@ -1,5 +1,6 @@
 # http4s-laminar-stack ![build](https://github.com/keynmol/http4s-laminar-stack/workflows/build/badge.svg)
 
+
 Example of 
 
 1. Client written with [Laminar](https://github.com/raquo/Laminar), interacting with server using [sttp](https://github.com/softwaremill/sttp)
@@ -50,7 +51,7 @@ sbt> backend/docker:publishLocal
 Will publish the docker image with fully optimised JS code, and you can run the container:
 
 ```bash
-✗ docker run --rm -p 8080:8080 backend:0.1.0-SNAPSHOT
+✗ docker run --rm -p 8080:8080 laminar-http4s-example:0.1.0-SNAPSHOT
 
 SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
 SLF4J: Defaulting to no-operation (NOP) logger implementation
