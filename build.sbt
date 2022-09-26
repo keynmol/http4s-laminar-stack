@@ -10,7 +10,7 @@ val V = new {
   val decline          = "1.4.0"
   val organiseImports  = "0.6.0"
   val betterMonadicFor = "0.3.1"
-  val weaver           = "0.6.15"
+  val weaver           = "0.8.0"
 }
 
 scalaVersion := V.Scala
