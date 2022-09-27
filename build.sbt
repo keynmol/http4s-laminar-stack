@@ -44,14 +44,17 @@ val Dependencies = new {
 
 inThisBuild(
   Seq(
-    scalafixDependencies += "com.github.liancheng" %% "organize-imports" % V.organiseImports
+    scalafixDependencies += "com.github.liancheng" %% "organize-imports" % V.organiseImports,
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision
   )
 )
 
 lazy val root =
-  (project in file(".")).aggregate(frontend, backend, shared.js, shared.jvm)
+  project.in(file(".")).aggregate(frontend, backend, shared.js, shared.jvm)
 
-lazy val frontend = (project in file("modules/frontend"))
+lazy val frontend = project
+  .in(file("modules/frontend"))
   .dependsOn(shared.js)
   .enablePlugins(ScalaJSPlugin)
   .settings(scalaJSUseMainModuleInitializer := true)
@@ -62,7 +65,8 @@ lazy val frontend = (project in file("modules/frontend"))
   )
   .settings(commonBuildSettings)
 
-lazy val backend = (project in file("modules/backend"))
+lazy val backend = project
+  .in(file("modules/backend"))
   .dependsOn(shared.jvm)
   .settings(Dependencies.backend)
   .settings(Dependencies.tests)
