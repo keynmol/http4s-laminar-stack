@@ -1,28 +1,27 @@
 package example.backend
 
-import cats.effect._
+import cats.effect.*
 
-import org.http4s.implicits._
-import org.http4s.server.blaze.BlazeServerBuilder
+import org.http4s.ember.server.EmberServerBuilder
+import org.http4s.implicits.*
 import org.http4s.server.middleware.GZip
 
-object Server extends IOApp {
+object Server extends IOApp:
   def resource(service: Service, config: ServerConfig) =
-    for {
-      blocker <- Blocker.apply[IO]
+    val frontendJS = config.mode + ".js"
+    val routes     = new Routes(service, frontendJS).routes
 
-      builder    = BlazeServerBuilder[IO].bindHttp(config.port, config.host)
-      frontendJS = config.mode + ".js"
-      routes     = new Routes(service, blocker, frontendJS).routes
+    val app = GZip(routes)
 
-      app = GZip(routes)
+    EmberServerBuilder
+      .default[IO]
+      .withPort(config.port)
+      .withHost(config.host)
+      .withHttpApp(app.orNotFound)
+      .build
 
-      _ <- builder.withHttpApp(app.orNotFound).resource
-    } yield ()
-
-  def run(args: List[String]): IO[ExitCode] = {
-
-    ServerConfig.apply.parse(args) match {
+  def run(args: List[String]): IO[ExitCode] =
+    ServerConfig.apply.parse(args) match
       case Left(help) =>
         IO.delay(println(help)).as(ExitCode.Error)
       case Right(config) =>
@@ -35,6 +34,4 @@ object Server extends IOApp {
         resource(ServiceImpl, config)
           .use(_ => status *> IO.never)
           .as(ExitCode.Success)
-    }
-  }
-}
+end Server

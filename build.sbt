@@ -1,30 +1,29 @@
 val V = new {
-  val Scala      = "2.13.9"
-  val ScalaGroup = "2.13"
+  val Scala = "3.2.0"
 
-  val cats             = "2.4.1"
-  val laminar          = "0.13.0"
-  val http4s           = "0.21.33"
-  val sttp             = "2.3.0"
-  val circe            = "0.14.2"
-  val decline          = "2.3.1"
-  val organiseImports  = "0.6.0"
-  val betterMonadicFor = "0.3.1"
-  val weaver           = "0.6.15"
+  val laminar         = "0.14.2"
+  val http4s          = "0.23.15"
+  val http4sDom       = "0.2.0"
+  val circe           = "0.14.1"
+  val decline         = "2.1.0"
+  val organiseImports = "0.6.0"
+  val weaver          = "0.8.0"
 }
-
-scalaVersion := V.Scala
 
 val Dependencies = new {
   private val http4sModules =
-    Seq("dsl", "blaze-client", "blaze-server", "circe").map("http4s-" + _)
+    Seq("dsl", "ember-client", "ember-server", "circe").map("http4s-" + _)
 
   private val sttpModules = Seq("core", "circe")
 
   lazy val frontend = Seq(
     libraryDependencies ++=
-      sttpModules.map("com.softwaremill.sttp.client" %%% _ % V.sttp) ++
-        Seq("com.raquo" %%% "laminar" % V.laminar)
+      Seq(
+        "org.http4s" %%% "http4s-client" % V.http4s,
+        "org.http4s" %%% "http4s-circe"  % V.http4s,
+        "org.http4s" %%% "http4s-dom"    % V.http4sDom,
+        "com.raquo"  %%% "laminar"       % V.laminar
+      )
   )
 
   lazy val backend = Seq(
@@ -34,7 +33,7 @@ val Dependencies = new {
   )
 
   lazy val shared = Def.settings(
-    libraryDependencies += "io.circe" %%% "circe-generic" % V.circe
+    libraryDependencies += "io.circe" %%% "circe-core" % V.circe
   )
 
   lazy val tests = Def.settings(
@@ -46,16 +45,16 @@ val Dependencies = new {
 inThisBuild(
   Seq(
     scalafixDependencies += "com.github.liancheng" %% "organize-imports" % V.organiseImports,
-    semanticdbEnabled          := true,
-    semanticdbVersion          := scalafixSemanticdb.revision,
-    scalafixScalaBinaryVersion := V.ScalaGroup
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision
   )
 )
 
 lazy val root =
-  (project in file(".")).aggregate(frontend, backend, shared.js, shared.jvm)
+  project.in(file(".")).aggregate(frontend, backend, shared.js, shared.jvm)
 
-lazy val frontend = (project in file("modules/frontend"))
+lazy val frontend = project
+  .in(file("modules/frontend"))
   .dependsOn(shared.js)
   .enablePlugins(ScalaJSPlugin)
   .settings(scalaJSUseMainModuleInitializer := true)
@@ -66,7 +65,8 @@ lazy val frontend = (project in file("modules/frontend"))
   )
   .settings(commonBuildSettings)
 
-lazy val backend = (project in file("modules/backend"))
+lazy val backend = project
+  .in(file("modules/backend"))
   .dependsOn(shared.jvm)
   .settings(Dependencies.backend)
   .settings(Dependencies.tests)
@@ -117,12 +117,8 @@ fullOptCompileCopy := {
 
 }
 
-lazy val commonBuildSettings: Seq[Def.Setting[_]] = Seq(
-  scalaVersion := V.Scala,
-  addCompilerPlugin("com.olegpy" %% "better-monadic-for" % V.betterMonadicFor),
-  scalacOptions ++= Seq(
-    "-Ywarn-unused"
-  )
+lazy val commonBuildSettings: Seq[Def.Setting[?]] = Seq(
+  scalaVersion := V.Scala
 )
 
 addCommandAlias("runDev", ";fastOptCompileCopy; backend/reStart --mode dev")
@@ -132,7 +128,6 @@ val scalafixRules = Seq(
   "OrganizeImports",
   "DisableSyntax",
   "LeakingImplicitClassVal",
-  "ProcedureSyntax",
   "NoValInForComprehension"
 ).mkString(" ")
 
@@ -148,11 +143,9 @@ val CICommands = Seq(
 ).mkString(";")
 
 val PrepareCICommands = Seq(
-  s"compile:scalafix --rules $scalafixRules",
-  s"test:scalafix --rules $scalafixRules",
-  "test:scalafmtAll",
-  "compile:scalafmtAll",
-  "scalafmtSbt"
+  "scalafmtAll",
+  "scalafmtSbt",
+  s"scalafix $scalafixRules"
 ).mkString(";")
 
 addCommandAlias("ci", CICommands)

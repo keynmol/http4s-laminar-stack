@@ -1,42 +1,49 @@
 package example.frontend
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-import example.shared.Protocol._
-import sttp.client._
-import sttp.client.circe._
+import cats.effect.IO
+import cats.effect.unsafe.implicits.*
 
-trait Api {
+import org.http4s.Method.*
+import org.http4s.Uri
+import org.http4s.circe.CirceEntityCodec.*
+import org.http4s.client.Client
+import org.http4s.client.dsl.io.*
+import org.http4s.dom.FetchClientBuilder
+import org.http4s.syntax.all.*
+
+import example.shared.Protocol.*
+
+trait Api:
   def post(
       search: String,
       prefixOnly: Boolean = false
   ): Future[Either[Throwable, GetSuggestions.Response]]
-}
 
-object FutureApi extends Api {
-  implicit val backend = FetchBackend()
+object FutureApi extends Api:
+  private val client: Client[IO] = FetchClientBuilder[IO].create
 
-  val ApiHost = {
+  private def ApiHost =
     import org.scalajs.dom
 
     val scheme = dom.window.location.protocol
     val host   = dom.window.location.host
 
-    s"$scheme//$host"
-  }
+    Uri.unsafeFromString(s"$scheme//$host")
 
   def post(
       search: String,
       prefixOnly: Boolean = false
-  ): Future[Either[Throwable, GetSuggestions.Response]] = {
-
-    val req = basicRequest
-      .post(uri"$ApiHost/get-suggestions")
-      .body(GetSuggestions.Request(search, Some(prefixOnly)))
-      .response(asJson[GetSuggestions.Response])
-
-    req.send[Future].map(_.body)
-  }
-
-}
+  ): Future[Either[Throwable, GetSuggestions.Response]] =
+    client
+      .expect[GetSuggestions.Response](
+        POST(
+          GetSuggestions.Request(search, Some(prefixOnly)),
+          ApiHost / "get-suggestions"
+        )
+      )
+      .attempt
+      .unsafeToFuture()
+  end post
+end FutureApi

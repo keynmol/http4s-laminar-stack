@@ -27,7 +27,7 @@ jobs:
           node-version: '16'
 
       - name: Install jsdom
-        run: npm install jsdom@20.0.0 
+        run: npm install
 
       - name: Test
         run: sbt ci

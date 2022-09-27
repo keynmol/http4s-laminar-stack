@@ -1,19 +1,28 @@
 # http4s-laminar-stack ![build](https://github.com/keynmol/http4s-laminar-stack/workflows/build/badge.svg)
 
 
-Example of 
+This is an example of a full-stack application with the following features:
 
-1. Client written with [Laminar](https://github.com/raquo/Laminar), interacting with server using [sttp](https://github.com/softwaremill/sttp)
+- Scala 3 on both frontend and backend 
+- [Laminar](https://github.com/raquo/Laminar) as a frontend library
+- [Http4s](https://http4s.org/) as a backend HTTP server library 
+- Shared code with **protocol** definitions
+- Gzip compression on the server side
+- Docker packaging of the full application
+- Tests for the client with simulated DOM using [jsdom](https://github.com/scala-js/scala-js-env-jsdom-nodejs)
 
-2. Server with http4s serving both the compiled Javascript for the client and an endpoint for server-side interactions
+_**Note**_: this is a very basic setup, for a more complicated template (with Postgres,
+API spec using Smithy, etc.) please see [Smithy4s Fullstack template](https://github.com/indoorvivants/smithy4s-fullstack-template)
 
-3. Shared code with **protocol** definitions
+Additionally, you can check out my blog series about fullstack Scala 3:
 
-4. Gzip compression on the server side
+- [Twotm8](https://blog.indoorvivants.com/tags/series:twotm8) - building and deploying a full-stack 
+  Scala application using Scala Native and Scala.js 
 
-5. Docker packaging of the full application
+- [Smithy4s](https://blog.indoorvivants.com/tags/series:smithy4s) - building and 
+  deploying a full-stack Scala app with Smithy4s and Scala.js
 
-6. Tests for the client with simulated DOM using [jsdom](https://github.com/scala-js/scala-js-env-jsdom-nodejs)
+_**Note**_: this version of the template uses the latest and greatest from Cats Effect, http4s, Scala, etc. If you would like, please see the [last commit](https://github.com/keynmol/http4s-laminar-stack/commit/9d2078e0da73192be6d16d20ecaec1ee783db842) that referenced old versions of the libraries. Apart from Scala 3 (which is still wonky around IntelliJ support), I **highly** recommend sticking with the latest versions of the libraries. 
 
 ## Development mode
 
