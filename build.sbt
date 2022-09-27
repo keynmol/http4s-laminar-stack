@@ -3,7 +3,7 @@ val V = new {
 
   val laminar         = "0.14.2"
   val http4s          = "0.23.15"
-  val http4sDom       = "0.2.0"
+  val http4sDom       = "0.2.3"
   val circe           = "0.14.1"
   val decline         = "2.1.0"
   val organiseImports = "0.6.0"
