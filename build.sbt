@@ -6,11 +6,9 @@ val V = new {
   val http4sDom       = "0.2.0"
   val circe           = "0.14.1"
   val decline         = "2.1.0"
-  val organiseImports = "0.5.0"
+  val organiseImports = "0.6.0"
   val weaver          = "0.8.0"
 }
-
-scalaVersion := V.Scala
 
 val Dependencies = new {
   private val http4sModules =
@@ -91,10 +89,6 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .jsSettings(Dependencies.shared)
   .jsSettings(commonBuildSettings)
   .jvmSettings(commonBuildSettings)
-
-ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.5.0"
-ThisBuild / semanticdbEnabled := true
-ThisBuild / scalacOptions += "-Wunused:all"
 
 lazy val fastOptCompileCopy = taskKey[Unit]("")
 
