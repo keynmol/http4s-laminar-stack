@@ -1,13 +1,13 @@
 val V = new {
-  val Scala = "3.1.0"
+  val Scala = "3.2.0"
 
-  val laminar         = "0.14.0"
-  val http4s          = "0.23.6"
+  val laminar         = "0.14.2"
+  val http4s          = "0.23.15"
   val http4sDom       = "0.2.0"
   val circe           = "0.14.1"
   val decline         = "2.1.0"
   val organiseImports = "0.5.0"
-  val weaver          = "0.7.6"
+  val weaver          = "0.8.0"
 }
 
 scalaVersion := V.Scala
@@ -30,8 +30,8 @@ val Dependencies = new {
 
   lazy val backend = Seq(
     libraryDependencies ++=
-      http4sModules.map("org.http4s" %% _         % V.http4s) ++
-        Seq("com.monovore"           %% "decline" % V.decline)
+      http4sModules.map("org.http4s" %% _ % V.http4s) ++
+        Seq("com.monovore" %% "decline" % V.decline)
   )
 
   lazy val shared = Def.settings(
@@ -43,6 +43,12 @@ val Dependencies = new {
     testFrameworks += new TestFramework("weaver.framework.CatsEffect")
   )
 }
+
+inThisBuild(
+  Seq(
+    scalafixDependencies += "com.github.liancheng" %% "organize-imports" % V.organiseImports
+  )
+)
 
 lazy val root =
   (project in file(".")).aggregate(frontend, backend, shared.js, shared.jvm)
@@ -67,9 +73,9 @@ lazy val backend = (project in file("modules/backend"))
   .enablePlugins(DockerPlugin)
   .settings(
     Test / fork := true,
-    Universal / mappings += {
+    Docker / mappings += {
       val appJs = (frontend / Compile / fullOptJS).value.data
-      appJs -> ("lib/prod.js")
+      appJs -> "/opt/docker/resources/prod.js"
     },
     Universal / javaOptions ++= Seq(
       "--port 8080",
@@ -113,7 +119,7 @@ fullOptCompileCopy := {
 
 }
 
-lazy val commonBuildSettings: Seq[Def.Setting[_]] = Seq(
+lazy val commonBuildSettings: Seq[Def.Setting[?]] = Seq(
   scalaVersion := V.Scala
 )
 

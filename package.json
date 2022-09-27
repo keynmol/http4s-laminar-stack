@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "dependencies": {},
   "devDependencies": {
-    "jsdom": "^16.3.0"
+    "jsdom": "^20.0.0"
   },
   "scripts": {}
 }
