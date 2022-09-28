@@ -1,19 +1,19 @@
 val V = new {
   val Scala = "3.2.0"
 
-  val laminar         = "0.14.2"
+  val laminar = "0.14.5"
 
-  val http4s          = "0.23.15"
+  val http4s = "0.23.15"
 
-  val http4sDom       = "0.2.3"
-  
-  val circe           = "0.14.3"
+  val http4sDom = "0.2.3"
 
-  val decline         = "2.1.0"
+  val circe = "0.14.3"
+
+  val decline = "2.1.0"
 
   val organiseImports = "0.6.0"
 
-  val weaver          = "0.8.0"
+  val weaver = "0.8.0"
 }
 
 val Dependencies = new {
