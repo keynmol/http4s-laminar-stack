@@ -7,7 +7,7 @@ val V = new {
 
   val http4sDom = "0.2.8"
 
-  val circe = "0.14.5"
+  val circe = "0.14.10"
 
   val decline = "2.4.1"
 
