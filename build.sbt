@@ -13,7 +13,7 @@ val V = new {
 
   val organiseImports = "0.6.0"
 
-  val weaver = "0.8.3"
+  val weaver = "0.8.4"
 }
 
 val Dependencies = new {
