@@ -1,5 +1,5 @@
 val V = new {
-  val Scala = "3.2.2"
+  val Scala = "3.3.4"
 
   val laminar = "0.14.5"
 
