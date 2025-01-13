@@ -9,7 +9,7 @@ val V = new {
 
   val circe = "0.14.5"
 
-  val decline = "2.4.1"
+  val decline = "2.5.0"
 
   val organiseImports = "0.6.0"
 
