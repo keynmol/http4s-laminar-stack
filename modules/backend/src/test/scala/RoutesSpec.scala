@@ -56,7 +56,7 @@ object RoutesSpec extends weaver.IOSuite with Http4sDsl[IO]:
   }
 
   test("calls the service on /get-suggestions") { probe =>
-    import Protocol.{GetSuggestions as GS}
+    import Protocol.GetSuggestions as GS
 
     val stubResponse = GS.Response(
       Seq("a", "b", "c", "d")
